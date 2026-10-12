@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b0f19;
+  --foreground: #cbd5e1;
+  --cosmic-mid: #1a0b2e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-cinzel), Georgia, serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.heading-glow {
+  text-shadow:
+    0 0 24px rgba(251, 191, 36, 0.35),
+    0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.glass-panel {
+  background: rgba(13, 18, 32, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cosmic-gradient {
+  background: linear-gradient(
+    165deg,
+    #0b0f19 0%,
+    #121528 35%,
+    #1a0b2e 70%,
+    #0b0f19 100%
+  );
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-4%, 2%, 0);
+  }
+}
+
+.stars {
+  background-repeat: repeat;
+}
+
+.stars-sm {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 80px 120px, #c4d4ff, transparent),
+    radial-gradient(1px 1px at 160px 60px, #fff, transparent);
+  background-size: 200px 200px;
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+.stars-md {
+  background-image:
+    radial-gradient(1.5px 1.5px at 50px 90px, #fde68a, transparent),
+    radial-gradient(1px 1px at 130px 180px, #fff, transparent);
+  background-size: 280px 280px;
+  animation: twinkle 6s ease-in-out infinite reverse;
+}
+
+.stars-lg {
+  background-image: radial-gradient(
+    2px 2px at 100px 150px,
+    rgba(34, 211, 238, 0.9),
+    transparent
+  );
+  background-size: 350px 350px;
+  animation: twinkle 8s ease-in-out infinite;
+}
+
+.cosmic-dust {
+  background-image: radial-gradient(
+    ellipse at 30% 20%,
+    rgba(167, 139, 250, 0.12),
+    transparent 50%
+  );
+  animation: drift 120s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes deckShuffle {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-6px) rotate(-2deg);
+  }
+  50% {
+    transform: translateX(8px) rotate(2deg);
+  }
+  75% {
+    transform: translateX(-4px) rotate(-1deg);
+  }
+}
+
+.deck-shuffling .deck-card-enter {
+  animation: deckShuffle 0.35s ease-in-out infinite;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.deck-card-enter {
+  animation: cardEnter 0.4s ease-out both;
+}
