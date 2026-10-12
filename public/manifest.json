@@ -1,0 +1,17 @@
+{
+  "name": "Celestial Cat Tarot",
+  "short_name": "Cat Tarot",
+  "description": "22 Major Arcana pet tarot — VI/EN",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080910",
+  "theme_color": "#080910",
+  "icons": [
+    {
+      "src": "/cards/00-the-fool.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

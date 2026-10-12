@@ -1,107 +1,162 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { petConfig } from "@/config/pet";
+import { topicLenses } from "@/data/topic-lenses";
 import { useI18n } from "@/lib/i18n";
 import { useAudio } from "@/lib/audio";
+import { useSettings } from "@/lib/settings";
 import {
   createShuffledDeck,
-  PPF_POSITIONS,
+  deckCardsFromShared,
+  emptyFlipped,
+  emptySlots,
   type DeckCard,
 } from "@/lib/deck";
 import { captureElementAsPng } from "@/lib/export-reading";
-import { saveJournalEntry, type TopicId } from "@/lib/tarot";
+import {
+  getSpreadPositions,
+  getSpreadPositionLabels,
+  saveJournalEntry,
+  slotCountForSpread,
+  spreads,
+  type SpreadId,
+  type TopicId,
+} from "@/lib/tarot";
+import {
+  decodeReadingFromHash,
+  encodeReadingToHash,
+  shareReadingText,
+} from "@/lib/share-reading";
 import { FlipCard } from "./FlipCard";
 import { TarotCardBack } from "./TarotCardBack";
 import { TarotCardFace } from "./TarotCardFace";
 import { GlassPanel } from "./GlassPanel";
 import { CardModal } from "./CardModal";
+import { DailyCardBanner } from "./DailyCardBanner";
 
 type Phase = "setup" | "deck" | "reading";
 
-const topics: { id: TopicId; vi: string; en: string }[] = [
-  { id: "general", vi: "Tổng quát", en: "General" },
-  { id: "love", vi: "Tình cảm", en: "Love" },
-  { id: "career", vi: "Công việc", en: "Career" },
-  { id: "self", vi: "Bản thân", en: "Self" },
-];
+const spreadIds: SpreadId[] = ["single", "three", "cross"];
 
 function MuteIcon({ muted }: { muted: boolean }) {
-  return (
-    <span className="text-lg" aria-hidden>
-      {muted ? "🔇" : "🔊"}
-    </span>
-  );
+  return <span className="text-lg" aria-hidden>{muted ? "🔇" : "🔊"}</span>;
+}
+
+function gridClassForCount(n: number): string {
+  if (n === 1) return "grid-cols-1 place-items-center";
+  if (n === 3) return "grid-cols-1 sm:grid-cols-3";
+  return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
 }
 
 export function PetTarotApp() {
   const { locale, setLocale, t } = useI18n();
   const { muted, toggleMute, playFlip, unlockAudio } = useAudio();
+  const settings = useSettings();
 
   const [phase, setPhase] = useState<Phase>("setup");
+  const [spread, setSpread] = useState<SpreadId>("three");
   const [topic, setTopic] = useState<TopicId>("general");
+  const [question, setQuestion] = useState("");
+  const slotCount = slotCountForSpread(spread);
+
   const [deck, setDeck] = useState<DeckCard[]>([]);
-  const [slots, setSlots] = useState<(DeckCard | null)[]>([
-    null,
-    null,
-    null,
-  ]);
-  const [flipped, setFlipped] = useState([false, false, false]);
+  const [slots, setSlots] = useState<(DeckCard | null)[]>(() => emptySlots(3));
+  const [flipped, setFlipped] = useState(() => emptyFlipped(3));
   const [shuffling, setShuffling] = useState(false);
   const [modalSlot, setModalSlot] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [journalSaved, setJournalSaved] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [shareOk, setShareOk] = useState(false);
 
   const exportRef = useRef<HTMLDivElement>(null);
 
-  const positions = PPF_POSITIONS[locale];
+  useEffect(() => {
+    const payload = decodeReadingFromHash(window.location.hash);
+    if (!payload) return;
+    const n = slotCountForSpread(payload.spread);
+    if (payload.cards.length !== n) return;
+    const built = deckCardsFromShared(payload.cards);
+    if (!built) return;
+    setSpread(payload.spread);
+    setTopic(payload.topic);
+    setSlots(built);
+    setFlipped(built.map(() => true));
+    setDeck([]);
+    setPhase("reading");
+    setJournalSaved(false);
+    setShareOk(false);
+  }, []);
+
+  const positions = useMemo(
+    () => getSpreadPositions(spread, locale),
+    [spread, locale],
+  );
+  const lens = topicLenses[topic];
   const drawnCount = slots.filter(Boolean).length;
-  const allDrawn = drawnCount === 3;
+  const allDrawn = drawnCount === slotCount;
   const allFlipped = allDrawn && flipped.every(Boolean);
 
   const availableDeck = useMemo(
-    () =>
-      deck.filter(
-        (d) => !slots.some((s) => s?.uid === d.uid),
-      ),
+    () => deck.filter((d) => !slots.some((s) => s?.uid === d.uid)),
     [deck, slots],
   );
 
+  const resetSlotsForSpread = (nextSpread: SpreadId) => {
+    const n = slotCountForSpread(nextSpread);
+    setSlots(emptySlots(n));
+    setFlipped(emptyFlipped(n));
+  };
+
   const beginDeck = () => {
     unlockAudio();
-    setDeck(createShuffledDeck());
-    setSlots([null, null, null]);
-    setFlipped([false, false, false]);
+    const n = slotCountForSpread(spread);
+    setDeck(
+      createShuffledDeck({
+        reversedChance: settings.reversedChance,
+        reversedEnabled: settings.reversedEnabled,
+        deckMode: settings.deckMode,
+      }),
+    );
+    setSlots(emptySlots(n));
+    setFlipped(emptyFlipped(n));
     setPhase("deck");
     setJournalSaved(false);
+    setShareOk(false);
   };
 
   const runShuffle = useCallback(() => {
     unlockAudio();
     setShuffling(true);
-    setSlots([null, null, null]);
-    setFlipped([false, false, false]);
+    const n = slotCountForSpread(spread);
+    setSlots(emptySlots(n));
+    setFlipped(emptyFlipped(n));
     setModalSlot(null);
     window.setTimeout(() => {
-      setDeck(createShuffledDeck());
+      setDeck(
+        createShuffledDeck({
+          reversedChance: settings.reversedChance,
+          reversedEnabled: settings.reversedEnabled,
+          deckMode: settings.deckMode,
+        }),
+      );
       setShuffling(false);
-    }, 900);
-  }, [unlockAudio]);
+    }, settings.reduceMotion ? 200 : 900);
+  }, [unlockAudio, spread, settings]);
 
   const drawFromDeck = (card: DeckCard) => {
-    if (!allDrawn) {
-      unlockAudio();
-      setSlots((prev) => {
-        const idx = prev.findIndex((s) => s === null);
-        if (idx === -1) return prev;
-        const next = [...prev];
-        next[idx] = card;
-        return next;
-      });
-    }
+    if (allDrawn) return;
+    unlockAudio();
+    setSlots((prev) => {
+      const idx = prev.findIndex((s) => s === null);
+      if (idx === -1) return prev;
+      const next = [...prev];
+      next[idx] = card;
+      return next;
+    });
   };
 
   const handleSlotClick = (index: number) => {
@@ -114,15 +169,14 @@ export function PetTarotApp() {
       setFlipped((prev) => {
         const next = [...prev];
         next[index] = true;
-        const filled = slots.filter(Boolean).length === 3;
-        if (filled && next.every(Boolean)) {
-          window.setTimeout(() => setPhase("reading"), 400);
-        }
+        const ready =
+          slots.filter(Boolean).length === slotCount &&
+          slots.every((s, i) => !s || next[i]);
+        if (ready) window.setTimeout(() => setPhase("reading"), 400);
         return next;
       });
       return;
     }
-
     setModalSlot(index);
   };
 
@@ -130,11 +184,13 @@ export function PetTarotApp() {
     saveJournalEntry({
       id: crypto.randomUUID(),
       at: new Date().toISOString(),
-      spread: "three",
+      spread,
       topic,
       cards: slots
         .filter((s): s is DeckCard => s !== null)
         .map((s) => ({ id: s.card.id, reversed: s.reversed })),
+      positionLabels: getSpreadPositionLabels(spread),
+      question: question.trim() || undefined,
       note: note.trim() || undefined,
     });
     setJournalSaved(true);
@@ -146,24 +202,46 @@ export function PetTarotApp() {
     try {
       await captureElementAsPng(
         exportRef.current,
-        `pet-tarot-${Date.now()}.png`,
+        `celestial-cat-${Date.now()}.png`,
       );
     } finally {
       setExporting(false);
     }
   };
 
+  const shareReading = async () => {
+    const cards = slots
+      .filter((s): s is DeckCard => s !== null)
+      .map((s) => ({ id: s.card.id, reversed: s.reversed }));
+    const hash = encodeReadingToHash({ spread, topic, cards });
+    const url = `${window.location.origin}${window.location.pathname}${hash}`;
+    const names = cards
+      .map((c) => {
+        const card = slots.find((s) => s?.card.id === c.id)?.card;
+        return card ? `${card.name[locale]}${c.reversed ? " ↓" : ""}` : "";
+      })
+      .join(" · ");
+    const ok = await shareReadingText(
+      `${petConfig.deckTitle[locale]} — ${names}`,
+      url,
+    );
+    setShareOk(ok);
+  };
+
   const resetAll = () => {
     setPhase("setup");
     setDeck([]);
-    setSlots([null, null, null]);
-    setFlipped([false, false, false]);
+    resetSlotsForSpread(spread);
     setNote("");
     setModalSlot(null);
   };
 
+  const spreadInfo = spreads[spread];
+
   return (
     <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 pb-20">
+      <DailyCardBanner />
+
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
           <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-cyan-400/40 shadow-[0_0_24px_rgba(34,211,238,0.35)] ring-2 ring-purple-500/30">
@@ -194,7 +272,6 @@ export function PetTarotApp() {
             onClick={toggleMute}
             className="glass-panel flex h-10 w-10 items-center justify-center rounded-full border-cyan-400/30 p-0!"
             aria-label={muted ? t("Bật âm thanh", "Unmute") : t("Tắt âm thanh", "Mute")}
-            title={muted ? t("Bật âm thanh", "Unmute") : t("Tắt âm thanh", "Mute")}
           >
             <MuteIcon muted={muted} />
           </button>
@@ -227,33 +304,64 @@ export function PetTarotApp() {
           >
             <GlassPanel>
               <h2 className="heading-glow font-serif text-xl text-amber-100">
-                {t("Quá khứ · Hiện tại · Tương lai", "Past · Present · Future")}
+                {t("Chọn trải bài", "Choose a spread")}
               </h2>
-              <p className="mt-2 text-sm text-slate-400">
-                {t(
-                  "Xào bộ bài, chọn 3 lá úp từ deck, lật từng lá rồi xem chi tiết.",
-                  "Shuffle the deck, pick 3 face-down cards, flip each one, then explore meanings.",
-                )}
-              </p>
-              <h3 className="mt-6 font-serif text-sm uppercase tracking-widest text-cyan-300/90">
-                {t("Chủ đề", "Topic")}
-              </h3>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {topics.map((tp) => (
+              <div className="mt-4 flex flex-col gap-2">
+                {spreadIds.map((id) => (
                   <button
-                    key={tp.id}
+                    key={id}
                     type="button"
-                    onClick={() => setTopic(tp.id)}
-                    className={`rounded-full border px-4 py-2 text-sm transition ${
-                      topic === tp.id
+                    onClick={() => {
+                      setSpread(id);
+                      resetSlotsForSpread(id);
+                    }}
+                    className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
+                      spread === id
                         ? "border-amber-400/50 bg-amber-400/10 text-amber-100"
                         : "border-white/10 text-slate-400 hover:border-cyan-400/30"
                     }`}
                   >
-                    {locale === "vi" ? tp.vi : tp.en}
+                    <span className="font-semibold">{spreads[id].label[locale]}</span>
+                    <span className="mt-1 block text-xs opacity-80">
+                      {spreads[id].blurb[locale]}
+                    </span>
                   </button>
                 ))}
               </div>
+
+              <h3 className="mt-6 font-serif text-sm uppercase tracking-widest text-cyan-300/90">
+                {t("Chủ đề", "Topic")}
+              </h3>
+              <p className="mt-2 text-sm text-slate-400">{lens.intro[locale]}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(Object.keys(topicLenses) as TopicId[]).map((tp) => (
+                  <button
+                    key={tp}
+                    type="button"
+                    onClick={() => setTopic(tp)}
+                    className={`rounded-full border px-4 py-2 text-sm transition ${
+                      topic === tp
+                        ? "border-amber-400/50 bg-amber-400/10 text-amber-100"
+                        : "border-white/10 text-slate-400 hover:border-cyan-400/30"
+                    }`}
+                  >
+                    {topicLenses[tp].label[locale]}
+                  </button>
+                ))}
+              </div>
+              <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-slate-500">
+                {lens.prompts[locale].map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+              <label className="mt-4 block text-sm text-slate-400">
+                {t("Câu hỏi của bạn (tuỳ chọn)", "Your question (optional)")}
+                <input
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-200"
+                />
+              </label>
               <button
                 type="button"
                 onClick={beginDeck}
@@ -275,7 +383,7 @@ export function PetTarotApp() {
             <GlassPanel className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
               <div>
                 <h2 className="font-serif text-lg text-amber-100">
-                  {t("Trải ba lá", "Three-card spread")}
+                  {spreadInfo.label[locale]}
                 </h2>
                 <p className="text-sm text-slate-400">
                   {allDrawn
@@ -284,8 +392,8 @@ export function PetTarotApp() {
                         "Tap to flip · tap revealed cards to zoom",
                       )
                     : t(
-                        `Chọn ${3 - drawnCount} lá nữa từ deck (${drawnCount}/3)`,
-                        `Pick ${3 - drawnCount} more from the deck (${drawnCount}/3)`,
+                        `Chọn ${slotCount - drawnCount} lá nữa (${drawnCount}/${slotCount})`,
+                        `Pick ${slotCount - drawnCount} more (${drawnCount}/${slotCount})`,
                       )}
                 </p>
               </div>
@@ -301,12 +409,12 @@ export function PetTarotApp() {
               </button>
             </GlassPanel>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className={`grid gap-6 ${gridClassForCount(slotCount)}`}>
               {positions.map((label, index) => {
                 const card = slots[index];
                 return (
-                  <div key={label} className="flex flex-col items-center gap-3">
-                    <p className="text-xs font-medium uppercase tracking-[0.2em] text-cyan-300/80">
+                  <div key={`${label}-${index}`} className="flex flex-col items-center gap-3">
+                    <p className="text-center text-xs font-medium uppercase tracking-[0.2em] text-cyan-300/80">
                       {label}
                     </p>
                     <div className="flex h-52 w-36 sm:h-60 sm:w-44 items-center justify-center">
@@ -315,7 +423,7 @@ export function PetTarotApp() {
                           flipped={flipped[index]}
                           onClick={() => handleSlotClick(index)}
                           className="h-full w-full cursor-pointer"
-                          glow={index === 1 ? "gold" : "cyan"}
+                          glow={index === Math.floor(slotCount / 2) ? "gold" : "cyan"}
                           front={
                             <TarotCardFace
                               card={card.card}
@@ -339,15 +447,9 @@ export function PetTarotApp() {
               <h3 className="font-serif text-sm uppercase tracking-widest text-amber-200/90">
                 {t("Bộ bài (úp)", "Deck (face down)")}
               </h3>
-              <p className="mt-1 text-xs text-slate-500">
-                {t(
-                  "Nhấn một lá để rút vào vị trí còn trống.",
-                  "Click a card to draw it into the next open slot.",
-                )}
-              </p>
               <div
                 className={`mt-4 grid max-h-[420px] grid-cols-4 gap-2 overflow-y-auto sm:grid-cols-6 md:grid-cols-8 ${
-                  shuffling ? "deck-shuffling" : ""
+                  shuffling && !settings.reduceMotion ? "deck-shuffling" : ""
                 }`}
               >
                 {availableDeck.map((d, i) => (
@@ -369,6 +471,9 @@ export function PetTarotApp() {
 
             {phase === "reading" && allFlipped && (
               <div className="space-y-6">
+                <GlassPanel>
+                  <p className="text-sm text-cyan-200/80">{lens.intro[locale]}</p>
+                </GlassPanel>
                 <div
                   ref={exportRef}
                   className="rounded-2xl border border-amber-400/20 bg-[#0b0f19] p-6"
@@ -377,9 +482,10 @@ export function PetTarotApp() {
                     {petConfig.deckTitle[locale]}
                   </p>
                   <p className="text-center text-xs text-slate-500">
+                    {spreadInfo.label[locale]} ·{" "}
                     {new Date().toLocaleDateString(locale === "vi" ? "vi-VN" : "en-US")}
                   </p>
-                  <div className="mt-4 grid grid-cols-3 gap-3">
+                  <div className={`mt-4 grid gap-3 ${gridClassForCount(slotCount)}`}>
                     {slots.map((s, i) =>
                       s ? (
                         <div key={s.uid} className="text-center">
@@ -397,9 +503,6 @@ export function PetTarotApp() {
                           </p>
                           <p className="font-serif text-xs text-amber-100">
                             {s.card.name[locale]}
-                          </p>
-                          <p className="text-[10px] text-slate-400">
-                            {s.card.keywords[locale].slice(0, 3).join(" · ")}
                           </p>
                         </div>
                       ) : null,
@@ -431,29 +534,23 @@ export function PetTarotApp() {
                 )}
 
                 <GlassPanel>
-                  <label
-                    htmlFor="journal-note"
-                    className="font-serif text-sm text-amber-100"
-                  >
-                    {t("Ghi chú", "Notes")}
-                  </label>
                   <textarea
-                    id="journal-note"
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     rows={3}
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 p-3 text-sm text-slate-200"
+                    placeholder={t("Ghi chú...", "Notes...")}
+                    className="w-full rounded-xl border border-white/10 bg-black/30 p-3 text-sm text-slate-200"
                   />
                   <div className="mt-4 flex flex-wrap gap-3">
                     <button
                       type="button"
                       onClick={exportReading}
                       disabled={exporting}
-                      className="rounded-full border border-amber-400/50 bg-amber-400/10 px-5 py-2 text-sm font-medium text-amber-100"
+                      className="rounded-full border border-amber-400/50 bg-amber-400/10 px-5 py-2 text-sm text-amber-100"
                     >
                       {exporting
                         ? t("Đang tạo ảnh...", "Creating image...")
-                        : t("Lưu trải bài thành ảnh PNG", "Save reading as PNG")}
+                        : t("Lưu PNG", "Save PNG")}
                     </button>
                     <button
                       type="button"
@@ -461,13 +558,22 @@ export function PetTarotApp() {
                       className="rounded-full border border-cyan-400/40 px-5 py-2 text-sm text-cyan-100"
                     >
                       {journalSaved
-                        ? t("Đã lưu nhật ký ✓", "Journal saved ✓")
-                        : t("Lưu nhật ký", "Save to journal")}
+                        ? t("Đã lưu ✓", "Saved ✓")
+                        : t("Lưu nhật ký", "Save journal")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={shareReading}
+                      className="rounded-full border border-white/20 px-5 py-2 text-sm text-slate-300"
+                    >
+                      {shareOk
+                        ? t("Đã sao chép/chia sẻ", "Shared/copied")
+                        : t("Chia sẻ", "Share")}
                     </button>
                     <button
                       type="button"
                       onClick={resetAll}
-                      className="rounded-full px-5 py-2 text-sm text-slate-400 hover:text-slate-200"
+                      className="rounded-full px-5 py-2 text-sm text-slate-400"
                     >
                       {t("Trải bài mới", "New reading")}
                     </button>
@@ -483,17 +589,8 @@ export function PetTarotApp() {
         open={modalSlot !== null}
         onClose={() => setModalSlot(null)}
         drawn={modalSlot !== null ? slots[modalSlot] : null}
-        positionLabel={
-          modalSlot !== null ? positions[modalSlot] : undefined
-        }
+        positionLabel={modalSlot !== null ? positions[modalSlot] : undefined}
       />
-
-      <footer className="text-center text-xs text-slate-600">
-        {t(
-          "Tarot mang tính giải trí và tự suy ngẫm — không thay thế tư vấn chuyên môn.",
-          "Tarot is for entertainment and reflection — not professional advice.",
-        )}
-      </footer>
     </div>
   );
 }
