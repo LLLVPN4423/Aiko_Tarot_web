@@ -1,0 +1,623 @@
+{
+  "project": "Celestial Cat Tarot",
+  "version": 1,
+  "cards": [
+    {
+      "id": 0,
+      "number": 0,
+      "slug": "the-fool",
+      "name": "The Fool",
+      "roman_numeral": "0",
+      "upright_meaning": "Beginnings, freedom, trust, exploration",
+      "visual_concept": "Cosmic journey start at the edge of the unknown",
+      "cat_pose": "Walking to edge of cosmic cliff, one paw stepping forward, head raised to sky",
+      "props": "Small travel bindle with moon and star charm",
+      "tarot_symbols": "Cosmic dawn, path of light, guiding star",
+      "astrology_symbols": "Uranus spark, open sky constellations",
+      "color_palette": [
+        "#111A38",
+        "#D9B66F",
+        "#68528E"
+      ],
+      "composition": "Low three-quarter view, cat lower center, vast sky above, cliff diagonal",
+      "emotion": "Curious, trusting, unaware of what lies ahead",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Tabby cat at the lip of a floating cosmic cliff in deep space, one front paw mid-step forward, small bindle on a stick with moon-star emblem, aurora dawn and bright path of stars ahead, gentle nebula",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, reckless falling, injured cat",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/00-the-fool/art_raw.png",
+        "art_composed": "assets/cards/00-the-fool/art_composed.png",
+        "final": "assets/cards/00-the-fool/final.png"
+      }
+    },
+    {
+      "id": 1,
+      "number": 1,
+      "slug": "the-magician",
+      "name": "The Magician",
+      "roman_numeral": "I",
+      "upright_meaning": "Will, skill, manifesting ideas",
+      "cat_pose": "Standing behind ritual table, one forepaw raised toward energy stream, other paw on table",
+      "props": "Altar with wand, cup, coin, sword symbols",
+      "tarot_symbols": "Infinity lemniscate, as above so below axis",
+      "astrology_symbols": "Mercury glyphs, vertical light pillar",
+      "color_palette": [
+        "#343A75",
+        "#D9B66F",
+        "#080910"
+      ],
+      "composition": "Front-facing medium shot, symmetrical table, cat centered",
+      "emotion": "Focused, capable, intentional",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Confident tabby behind floating altar in starfield, raised paw channeling spiral energy upward, other paw grounded on table with four tarot suit symbols glowing, infinity symbol subtle in sky",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, chaotic magic clutter",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/01-the-magician/art_raw.png",
+        "art_composed": "assets/cards/01-the-magician/art_composed.png",
+        "final": "assets/cards/01-the-magician/final.png"
+      }
+    },
+    {
+      "id": 2,
+      "number": 2,
+      "slug": "the-high-priestess",
+      "name": "The High Priestess",
+      "roman_numeral": "II",
+      "upright_meaning": "Intuition, secrets, hidden knowledge",
+      "cat_pose": "Seated upright between two cosmic pillars, calm direct gaze",
+      "props": "Veiled star curtain, closed book on lap",
+      "tarot_symbols": "Moon crescent, pomegranates subtle, veil of stars",
+      "astrology_symbols": "Moon phases, Cancer shell motif",
+      "color_palette": [
+        "#111A38",
+        "#68528E",
+        "#E7D7B5"
+      ],
+      "composition": "Symmetrical temple, cat centered between pillars",
+      "emotion": "Still, mysterious, inward",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Serene tabby seated between two indigo pillars in cosmic temple, crescent moon halo, starry veil behind, ancient book closed before paws",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, seductive human priestess",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/02-the-high-priestess/art_raw.png",
+        "art_composed": "assets/cards/02-the-high-priestess/art_composed.png",
+        "final": "assets/cards/02-the-high-priestess/final.png"
+      }
+    },
+    {
+      "id": 3,
+      "number": 3,
+      "slug": "the-empress",
+      "name": "The Empress",
+      "roman_numeral": "III",
+      "upright_meaning": "Life, nurture, abundance, creation",
+      "cat_pose": "Reclining or relaxed sit on celestial throne in garden",
+      "props": "Crown of stars, flowering vines",
+      "tarot_symbols": "Venus heart shield, wheat and blooms",
+      "astrology_symbols": "Venus, fertile earth planet",
+      "color_palette": [
+        "#68528E",
+        "#D9B66F",
+        "#3d5a3d accents"
+      ],
+      "composition": "Soft horizontal, cat on throne mid-frame, garden depth",
+      "emotion": "Warm, alive, generous",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Content tabby on ornate nebula throne surrounded by celestial garden, blooming constellations, green-blue planet and growth energy ribbons",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, human empress",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/03-the-empress/art_raw.png",
+        "art_composed": "assets/cards/03-the-empress/art_composed.png",
+        "final": "assets/cards/03-the-empress/final.png"
+      }
+    },
+    {
+      "id": 4,
+      "number": 4,
+      "slug": "the-emperor",
+      "name": "The Emperor",
+      "roman_numeral": "IV",
+      "upright_meaning": "Order, discipline, structure, authority",
+      "cat_pose": "Straight sit on stone cosmic throne, steady gaze",
+      "props": "Angular crown, ram motifs subtle",
+      "tarot_symbols": "Four corner geometry, mountain of stars",
+      "astrology_symbols": "Aries, Mars angular lines",
+      "color_palette": [
+        "#080910",
+        "#343A75",
+        "#D9B66F"
+      ],
+      "composition": "Rigid symmetry, throne centered, architectural depth",
+      "emotion": "Firm, commanding, stable",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Alert tabby on sharp-edged star rock throne, symmetrical cosmic architecture, distant star mountains, geometric gold corners",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, military violence",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/04-the-emperor/art_raw.png",
+        "art_composed": "assets/cards/04-the-emperor/art_composed.png",
+        "final": "assets/cards/04-the-emperor/final.png"
+      }
+    },
+    {
+      "id": 5,
+      "number": 5,
+      "slug": "the-hierophant",
+      "name": "The Hierophant",
+      "roman_numeral": "V",
+      "upright_meaning": "Tradition, teaching, belief systems",
+      "cat_pose": "Seated on raised steps as knowledge keeper, two small symbolic cat statues below",
+      "props": "Keys, ritual circle, pillars",
+      "tarot_symbols": "Triple crown subtle, crossed keys",
+      "astrology_symbols": "Taurus, sacred column",
+      "color_palette": [
+        "#111A38",
+        "#E7D7B5",
+        "#D9B66F"
+      ],
+      "composition": "Elevated center, disciples as stone cats flanking",
+      "emotion": "Calm, respectable, wise",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Dignified tabby on temple steps in cosmos, two small cat effigies as pupils, golden keys and ritual ring floating, columns fade into stars",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, religious mockery text",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/05-the-hierophant/art_raw.png",
+        "art_composed": "assets/cards/05-the-hierophant/art_composed.png",
+        "final": "assets/cards/05-the-hierophant/final.png"
+      }
+    },
+    {
+      "id": 6,
+      "number": 6,
+      "slug": "the-lovers",
+      "name": "The Lovers",
+      "roman_numeral": "VI",
+      "upright_meaning": "Connection, choice, harmony",
+      "cat_pose": "Standing at fork between two energy paths, looking up at radiant body",
+      "props": "None heavy; dual star streams",
+      "tarot_symbols": "Sun and moon above, angelic light as nebula figure",
+      "astrology_symbols": "Gemini twin constellations linking",
+      "color_palette": [
+        "#68528E",
+        "#D9B66F",
+        "#111A38"
+      ],
+      "composition": "Central cat, Y-path, luminous apex",
+      "emotion": "Attuned yet choosing",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Tabby at split of two glowing cosmic paths, linked twin constellations, sun disc and moon crescent in harmony above, choice moment",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, two different cats mating",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/06-the-lovers/art_raw.png",
+        "art_composed": "assets/cards/06-the-lovers/art_composed.png",
+        "final": "assets/cards/06-the-lovers/final.png"
+      }
+    },
+    {
+      "id": 7,
+      "number": 7,
+      "slug": "the-chariot",
+      "name": "The Chariot",
+      "roman_numeral": "VII",
+      "upright_meaning": "Willpower, control, forward motion",
+      "cat_pose": "Standing firm on moving celestial chariot",
+      "props": "Star chariot, zodiac wheel traces",
+      "tarot_symbols": "Black and white energy sources as comets",
+      "astrology_symbols": "Cancer shell chariot, star trails",
+      "color_palette": [
+        "#343A75",
+        "#D9B66F",
+        "#080910"
+      ],
+      "composition": "Dynamic diagonal motion, cat stable center",
+      "emotion": "Determined, focused",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Determined tabby on sleek cosmic chariot racing through stars, two opposing comet energies bridled, zodiac wheel motion blur",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, cartoon race car",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/07-the-chariot/art_raw.png",
+        "art_composed": "assets/cards/07-the-chariot/art_composed.png",
+        "final": "assets/cards/07-the-chariot/final.png"
+      }
+    },
+    {
+      "id": 8,
+      "number": 8,
+      "slug": "strength",
+      "name": "Strength",
+      "roman_numeral": "VIII",
+      "upright_meaning": "Inner strength, courage, gentle mastery",
+      "cat_pose": "Calm touch to tame swirling cosmic energy (not a lion fight)",
+      "props": "Infinity above head subtle",
+      "tarot_symbols": "Infinity, soft halo",
+      "astrology_symbols": "Leo constellation as energy not lion",
+      "color_palette": [
+        "#68528E",
+        "#D9B66F",
+        "#E7D7B5"
+      ],
+      "composition": "Close medium, cat paw meeting light stream",
+      "emotion": "Quiet courage",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Peaceful tabby gently calming a powerful golden nebula stream with one paw, infinity glyph in starlight, no violence no roaring beast",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, lion attack, blood, aggression",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/08-strength/art_raw.png",
+        "art_composed": "assets/cards/08-strength/art_composed.png",
+        "final": "assets/cards/08-strength/final.png"
+      }
+    },
+    {
+      "id": 9,
+      "number": 9,
+      "slug": "the-hermit",
+      "name": "The Hermit",
+      "roman_numeral": "IX",
+      "upright_meaning": "Solitude, introspection, truth-seeking",
+      "cat_pose": "Alone on mountain peak in deep space, holding small lantern",
+      "props": "Star lantern staff",
+      "tarot_symbols": "Six-point star in lamp, winding path below",
+      "astrology_symbols": "Virgo harvest star, distant constellations",
+      "color_palette": [
+        "#080910",
+        "#111A38",
+        "#D9B66F"
+      ],
+      "composition": "Small cat on peak, vast dark sky",
+      "emotion": "Quiet, contemplative",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Solitary tabby on star mountain summit, tiny bright lantern illuminating face, long path of dim stars below, infinite dark",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, lonely sad rain cliché",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/09-the-hermit/art_raw.png",
+        "art_composed": "assets/cards/09-the-hermit/art_composed.png",
+        "final": "assets/cards/09-the-hermit/final.png"
+      }
+    },
+    {
+      "id": 10,
+      "number": 10,
+      "slug": "wheel-of-fortune",
+      "name": "Wheel of Fortune",
+      "roman_numeral": "X",
+      "upright_meaning": "Cycles, change, turning point",
+      "cat_pose": "At center or rim of giant rotating celestial wheel",
+      "props": "Zodiac wheel, phase marks",
+      "tarot_symbols": "Wheel with alchemical letters as shapes only abstract",
+      "astrology_symbols": "Jupiter, zodiac ring",
+      "color_palette": [
+        "#343A75",
+        "#68528E",
+        "#D9B66F"
+      ],
+      "composition": "Circular dominant, cat at hub or climbing rim",
+      "emotion": "Surprised, in motion",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Tabby on enormous rotating zodiac wheel in galaxy, moon phases marked on rim, cosmic momentum, surprised alert expression",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, casino slot machine",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/10-wheel-of-fortune/art_raw.png",
+        "art_composed": "assets/cards/10-wheel-of-fortune/art_composed.png",
+        "final": "assets/cards/10-wheel-of-fortune/final.png"
+      }
+    },
+    {
+      "id": 11,
+      "number": 11,
+      "slug": "justice",
+      "name": "Justice",
+      "roman_numeral": "XI",
+      "upright_meaning": "Fairness, balance, truth",
+      "cat_pose": "Upright sit before symmetric architecture, holding scale bar naturally with front paws",
+      "props": "Balance scales, sword of light vertical behind",
+      "tarot_symbols": "Scales, sword, symmetry axis",
+      "astrology_symbols": "Libra scales constellation",
+      "color_palette": [
+        "#111A38",
+        "#E7D7B5",
+        "#D9B66F"
+      ],
+      "composition": "Strict bilateral symmetry",
+      "emotion": "Objective, serious",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Upright tabby holding cosmic scales with front paws, symmetrical star courthouse, glowing sword of light behind as pillar, balanced composition",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, courtroom modern photo",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/11-justice/art_raw.png",
+        "art_composed": "assets/cards/11-justice/art_composed.png",
+        "final": "assets/cards/11-justice/final.png"
+      }
+    },
+    {
+      "id": 12,
+      "number": 12,
+      "slug": "the-hanged-man",
+      "name": "The Hanged Man",
+      "roman_numeral": "XII",
+      "upright_meaning": "Pause, new perspective, surrender",
+      "cat_pose": "Symbolic inverted pose floating peacefully, no rope harm",
+      "props": "Soft light halo at head",
+      "tarot_symbols": "Inverted energy lines, tree as nebula branch",
+      "astrology_symbols": "Neptune mist, Pisces dual fish stars",
+      "color_palette": [
+        "#68528E",
+        "#111A38",
+        "#D9B66F"
+      ],
+      "composition": "Vertical inversion surreal, calm",
+      "emotion": "Still, accepting",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Tabby in gentle symbolic upside-down float attached to glowing nebula branch, serene expression, halo at head, no pain no rope injury, surreal peaceful",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, realistic hanging, injury, distress",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/12-the-hanged-man/art_raw.png",
+        "art_composed": "assets/cards/12-the-hanged-man/art_composed.png",
+        "final": "assets/cards/12-the-hanged-man/final.png"
+      }
+    },
+    {
+      "id": 13,
+      "number": 13,
+      "slug": "death",
+      "name": "Death",
+      "roman_numeral": "XIII",
+      "upright_meaning": "End of cycle, transformation, rebirth",
+      "cat_pose": "Walking through opening cosmic gate, shadow left behind",
+      "props": "Gate arch, falling and rising petals as stardust",
+      "tarot_symbols": "Banner rose, river of stars",
+      "astrology_symbols": "Scorpio, phoenix stardust rebirth",
+      "color_palette": [
+        "#080910",
+        "#343A75",
+        "#68528E"
+      ],
+      "composition": "Gateway frame, cat mid-step through",
+      "emotion": "Serious, transformative not horror",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Tabby stepping through luminous cosmic archway, dark silhouette shed behind, wilted and blooming star flowers, crescent moon, rebirth dust not death of cat",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, dead cat, skeleton, gore, grim reaper killing",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/13-death/art_raw.png",
+        "art_composed": "assets/cards/13-death/art_composed.png",
+        "final": "assets/cards/13-death/final.png"
+      }
+    },
+    {
+      "id": 14,
+      "number": 14,
+      "slug": "temperance",
+      "name": "Temperance",
+      "roman_numeral": "XIV",
+      "upright_meaning": "Moderation, healing, blending",
+      "cat_pose": "Standing between two streams, pouring light between cups",
+      "props": "Two chalices, mingling liquid light",
+      "tarot_symbols": "Triangle in stars, path to distant sun",
+      "astrology_symbols": "Sagittarius arrow faint, rainbow merge",
+      "color_palette": [
+        "#111A38",
+        "#D9B66F",
+        "#E7D7B5"
+      ],
+      "composition": "Figure-eight flow between vessels",
+      "emotion": "Patient harmony",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Tabby carefully pouring glowing essence between two floating cups, twin colored streams merging midair, star triangle, distant dawn path",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, alcohol party",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/14-temperance/art_raw.png",
+        "art_composed": "assets/cards/14-temperance/art_composed.png",
+        "final": "assets/cards/14-temperance/final.png"
+      }
+    },
+    {
+      "id": 15,
+      "number": 15,
+      "slug": "the-devil",
+      "name": "The Devil",
+      "roman_numeral": "XV",
+      "upright_meaning": "Bondage, desire, shadow self",
+      "cat_pose": "Seated on dark pedestal, sharp gaze, loose energy chains",
+      "props": "Loose chains, mirror shadow",
+      "tarot_symbols": "Inverted pentagram geometry subtle, shadow duplicate",
+      "astrology_symbols": "Capricorn mountain, Saturn rings",
+      "color_palette": [
+        "#080910",
+        "#68528E",
+        "#D9B66F accents"
+      ],
+      "composition": "Low angle, cat on pedestal, shadow below",
+      "emotion": "Magnetic, mysterious not horror",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Intense tabby on obsidian cosmic pedestal, loose glowing chains not tight, reflection shadow below, geometric inverse star subtle, seductive dark nebula not demon cat",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, demon horns on cat, horror monster",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/15-the-devil/art_raw.png",
+        "art_composed": "assets/cards/15-the-devil/art_composed.png",
+        "final": "assets/cards/15-the-devil/final.png"
+      }
+    },
+    {
+      "id": 16,
+      "number": 16,
+      "slug": "the-tower",
+      "name": "The Tower",
+      "roman_numeral": "XVI",
+      "upright_meaning": "Sudden upheaval, truth, liberation",
+      "cat_pose": "Standing firm on rock ledge as celestial tower cracks behind",
+      "props": "Lightning, falling star masonry",
+      "tarot_symbols": "Crown toppling, fire as star burst",
+      "astrology_symbols": "Mars lightning, Uranus shock",
+      "color_palette": [
+        "#080910",
+        "#D9B66F lightning",
+        "#343A75"
+      ],
+      "composition": "Cat foreground stable, tower breaking background",
+      "emotion": "Tense, sudden drama",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Steadfast tabby on foreground asteroid ledge, massive star tower shattering behind with controlled lightning, debris as glowing fragments, cat identity clear",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, cat crushed, fire harm",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/16-the-tower/art_raw.png",
+        "art_composed": "assets/cards/16-the-tower/art_composed.png",
+        "final": "assets/cards/16-the-tower/final.png"
+      }
+    },
+    {
+      "id": 17,
+      "number": 17,
+      "slug": "the-star",
+      "name": "The Star",
+      "roman_numeral": "XVII",
+      "upright_meaning": "Hope, renewal, faith",
+      "cat_pose": "By star lake, one paw touching water pouring light",
+      "props": "Two vessels, large star above",
+      "tarot_symbols": "Eight small stars, nude nature as cosmic pool",
+      "astrology_symbols": "Aquarius water bearer as light",
+      "color_palette": [
+        "#111A38",
+        "#D9B66F",
+        "#E7D7B5"
+      ],
+      "composition": "Open sky, reflective water lower third",
+      "emotion": "Gentle, pure hope",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Soft tabby at edge of still star pond, pouring silver-gold light into water, brilliant central star and seven sisters, serene recovery mood",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, human figure",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/17-the-star/art_raw.png",
+        "art_composed": "assets/cards/17-the-star/art_composed.png",
+        "final": "assets/cards/17-the-star/final.png"
+      }
+    },
+    {
+      "id": 18,
+      "number": 18,
+      "slug": "the-moon",
+      "name": "The Moon",
+      "roman_numeral": "XVIII",
+      "upright_meaning": "Subconscious, dreams, uncertainty",
+      "cat_pose": "Walking misty path under enormous moon",
+      "props": "Two distant towers, pool reflections",
+      "tarot_symbols": "Crayfish as constellation creature subtle, dog/wolf as star wolves distant",
+      "astrology_symbols": "Pisces, full moon",
+      "color_palette": [
+        "#343A75",
+        "#68528E",
+        "#111A38"
+      ],
+      "composition": "Path perspective, giant moon top",
+      "emotion": "Wary, curious, dreamlike",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Cautious tabby on winding foggy star path, giant detailed moon dominates sky, twin far spires, water reflection, mysterious atmosphere",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, horror werewolf",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/18-the-moon/art_raw.png",
+        "art_composed": "assets/cards/18-the-moon/art_composed.png",
+        "final": "assets/cards/18-the-moon/final.png"
+      }
+    },
+    {
+      "id": 19,
+      "number": 19,
+      "slug": "the-sun",
+      "name": "The Sun",
+      "roman_numeral": "XIX",
+      "upright_meaning": "Vitality, joy, clarity",
+      "cat_pose": "Relaxed stand or lie under radiant sun disc, tail up happy",
+      "props": "Stylized sunflowers as star blooms",
+      "tarot_symbols": "Childlike sun face as disc only, wall behind optional as nebula",
+      "astrology_symbols": "Sun corona, Leo rays",
+      "color_palette": [
+        "#D9B66F",
+        "#E7D7B5",
+        "#111A38 edges"
+      ],
+      "composition": "Bright center sun, cat basking below",
+      "emotion": "Joyful, energized",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Happy tabby basking under massive golden sun in cosmic sky, tail gently raised, stylized sunflower-stars, warm clarity and confidence",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, dark gloomy",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/19-the-sun/art_raw.png",
+        "art_composed": "assets/cards/19-the-sun/art_composed.png",
+        "final": "assets/cards/19-the-sun/final.png"
+      }
+    },
+    {
+      "id": 20,
+      "number": 20,
+      "slug": "judgement",
+      "name": "Judgement",
+      "roman_numeral": "XX",
+      "upright_meaning": "Awakening, reckoning, new call",
+      "cat_pose": "Head raised toward descending celestial light beam",
+      "props": "Stylized trumpet in clouds, rising silhouettes as spirits stars",
+      "tarot_symbols": "Angel trumpet as light, graves as opening star fissures",
+      "astrology_symbols": "Pluto rebirth, resurrection rays",
+      "color_palette": [
+        "#E7D7B5",
+        "#D9B66F",
+        "#68528E"
+      ],
+      "composition": "Vertical god-ray, cat lower third looking up",
+      "emotion": "Awakened, resolved",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Tabby looking up at massive column of angelic starlight, stylized cosmic trumpet in clouds, faint spirit shapes rising as stardust, awakening moment",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, biblical text, judgement scary face",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/20-judgement/art_raw.png",
+        "art_composed": "assets/cards/20-judgement/art_composed.png",
+        "final": "assets/cards/20-judgement/final.png"
+      }
+    },
+    {
+      "id": 21,
+      "number": 21,
+      "slug": "the-world",
+      "name": "The World",
+      "roman_numeral": "XXI",
+      "upright_meaning": "Completion, wholeness, new cycle",
+      "cat_pose": "Center of cosmic laurel wreath, light dance or stretch, tail following circular orbit",
+      "props": "Wreath ring, four corner symbols as constellations",
+      "tarot_symbols": "Mandala world ring, eagle lion bull angel as star icons corners",
+      "astrology_symbols": "Saturn completion, zodiac circle",
+      "color_palette": [
+        "#343A75",
+        "#D9B66F",
+        "#68528E"
+      ],
+      "composition": "Circular frame, cat in victorious center",
+      "emotion": "Complete, serene confidence",
+      "image_prompt": "Celestial Astrology cosmic vintage tarot fine art illustration, hand-painted texture, deep space #080910 #111A38 nebula #68528E, gold accents #D9B66F, controlled stars, astronomical symbols, dramatic lighting, vertical card art, clear empty margin top and bottom for typography, no text no letters no watermark. Same specific cat: domestic shorthair tabby, brown-grey and warm black tabby stripes and spots, lighter golden-tan muzzle and belly, round yellow-green eyes, large ears, pink-brown nose, long ringed tail with dark tip, natural feline anatomy, recognizable reference cat. Triumphant tabby in center of glowing cosmic laurel ring, body curved gracefully tail following orbit, four zodiac corner symbols, planets converging, wholeness not naive fool journey",
+      "negative_prompt": "wrong cat identity, different breed, changed fur pattern, changed eye color, oversized cartoon head, chibi, anthropomorphic human body, extra limbs, malformed anatomy, missing tail, cropped ears, any text, letters, watermark, clipart, plastic 3D, anime, excessive glow, neon, blurry face, same pose as fool cliff edge",
+      "image_status": "accepted",
+      "quality_status": "pass",
+      "files": {
+        "art_raw": "assets/cards/21-the-world/art_raw.png",
+        "art_composed": "assets/cards/21-the-world/art_composed.png",
+        "final": "assets/cards/21-the-world/final.png"
+      }
+    }
+  ]
+}

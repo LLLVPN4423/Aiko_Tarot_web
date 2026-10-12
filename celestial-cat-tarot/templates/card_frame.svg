@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1500" width="1000" height="1500">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080910"/>
+      <stop offset="100%" stop-color="#111A38"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b8944f"/>
+      <stop offset="50%" stop-color="#D9B66F"/>
+      <stop offset="100%" stop-color="#b8944f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="1500" fill="url(#bg)"/>
+  <!-- outer border -->
+  <rect x="24" y="24" width="952" height="1452" fill="none" stroke="url(#gold)" stroke-width="6" rx="12"/>
+  <rect x="40" y="40" width="920" height="1420" fill="none" stroke="#D9B66F" stroke-width="2" opacity="0.5" rx="8"/>
+  <!-- art window 2:3 inner -->
+  <rect id="art-slot" x="70" y="120" width="860" height="1140" fill="#0d1220" rx="4"/>
+  <!-- title safe zones (guides, optional) -->
+  <rect x="70" y="40" width="860" height="70" fill="none" stroke="#D9B66F" stroke-width="1" opacity="0.15"/>
+  <rect x="70" y="1280" width="860" height="180" fill="none" stroke="#D9B66F" stroke-width="1" opacity="0.15"/>
+</svg>

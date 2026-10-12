@@ -3,11 +3,11 @@ export const petConfig = {
   name: "Bé",
   species: "cat" as const,
   deckTitle: {
-    vi: "Bộ Tarot Bé Tabby",
-    en: "Baby Tabby Tarot",
+    vi: "Celestial Cat Tarot",
+    en: "Celestial Cat Tarot",
   },
   tagline: {
-    vi: "22 lá Major Arcana — lấy cảm hứng từ một chú mèo tabby nhà bạn",
-    en: "22 Major Arcana — inspired by your tabby companion",
+    vi: "22 lá Major Arcana — minh họa vũ trụ, nhân vật chính là chú mèo tabby của bạn",
+    en: "22 Major Arcana — celestial fine art starring your tabby companion",
   },
 };

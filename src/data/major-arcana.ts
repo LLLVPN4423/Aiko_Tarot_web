@@ -15,6 +15,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 0,
     slug: "the-fool",
+    imagePath: "/cards/00-the-fool.png",
     name: { vi: "Kẻ Khờ", en: "The Fool" },
     keywords: {
       vi: ["khởi đầu", "tự do", "niềm tin", "phiêu lưu"],
@@ -28,11 +29,11 @@ export const majorArcana: MajorArcanaCard[] = [
       vi: "Liều lĩnh thiếu suy xét hoặc trì hoãn quá lâu. Kiểm tra lại kế hoạch trước khi nhảy; đừng để sợ hãi khiến bạn bỏ lỡ cơ hội.",
       en: "Recklessness or hesitation that stalls growth. Recheck plans before you leap; don't let fear make you miss the opening.",
     },
-    imagePath: "/cards/00-the-fool.jpg",
   },
   {
     id: 1,
     slug: "the-magician",
+    imagePath: "/cards/01-the-magician.png",
     name: { vi: "Pháp Sư", en: "The Magician" },
     keywords: {
       vi: ["sáng tạo", "ý chí", "kỹ năng", "tập trung"],
@@ -46,11 +47,11 @@ export const majorArcana: MajorArcanaCard[] = [
       vi: "Phân tán năng lượng, thao túng hoặc tự nghi ngờ. Làm rõ động cơ và trung thực với bản thân trước khi thuyết phục người khác.",
       en: "Scattered energy, manipulation, or self-doubt. Clarify motives and be honest with yourself before persuading others.",
     },
-    imagePath: "/cards/01-the-magician.jpg",
   },
   {
     id: 2,
     slug: "the-high-priestess",
+    imagePath: "/cards/02-the-high-priestess.png",
     name: { vi: "Nữ Tư Tế", en: "The High Priestess" },
     keywords: {
       vi: ["trực giác", "bí ẩn", "nội tâm", "chờ đợi"],
@@ -68,6 +69,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 3,
     slug: "the-empress",
+    imagePath: "/cards/03-the-empress.png",
     name: { vi: "Nữ Hoàng", en: "The Empress" },
     keywords: {
       vi: ["nuôi dưỡng", "đẹp đẽ", "sinh sản", "dư dả"],
@@ -85,6 +87,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 4,
     slug: "the-emperor",
+    imagePath: "/cards/04-the-emperor.png",
     name: { vi: "Hoàng Đế", en: "The Emperor" },
     keywords: {
       vi: ["cấu trúc", "quyền lực", "ổn định", "ranh giới"],
@@ -102,6 +105,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 5,
     slug: "the-hierophant",
+    imagePath: "/cards/05-the-hierophant.png",
     name: { vi: "Giáo Hoàng", en: "The Hierophant" },
     keywords: {
       vi: ["truyền thống", "học hỏi", "cộng đồng", "giá trị"],
@@ -119,6 +123,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 6,
     slug: "the-lovers",
+    imagePath: "/cards/06-the-lovers.png",
     name: { vi: "Người Tình", en: "The Lovers" },
     keywords: {
       vi: ["lựa chọn", "gắn kết", "hòa hợp", "giá trị"],
@@ -136,6 +141,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 7,
     slug: "the-chariot",
+    imagePath: "/cards/07-the-chariot.png",
     name: { vi: "Cỗ Xe", en: "The Chariot" },
     keywords: {
       vi: ["tiến lên", "quyết tâm", "chiến thắng", "kiểm soát"],
@@ -153,6 +159,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 8,
     slug: "strength",
+    imagePath: "/cards/08-strength.png",
     name: { vi: "Sức Mạnh", en: "Strength" },
     keywords: {
       vi: ["kiên nhẫn", "dũng cảm", "dịu dàng", "tự chủ"],
@@ -170,6 +177,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 9,
     slug: "the-hermit",
+    imagePath: "/cards/09-the-hermit.png",
     name: { vi: "Ẩn Sĩ", en: "The Hermit" },
     keywords: {
       vi: ["suy ngẫm", "cô đơn", "trí tuệ", "tìm kiếm"],
@@ -187,6 +195,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 10,
     slug: "wheel-of-fortune",
+    imagePath: "/cards/10-wheel-of-fortune.png",
     name: { vi: "Bánh Xe", en: "Wheel of Fortune" },
     keywords: {
       vi: ["vận may", "chu kỳ", "thay đổi", "bất ngờ"],
@@ -204,6 +213,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 11,
     slug: "justice",
+    imagePath: "/cards/11-justice.png",
     name: { vi: "Công Lý", en: "Justice" },
     keywords: {
       vi: ["cân bằng", "sự thật", "trách nhiệm", "hậu quả"],
@@ -221,6 +231,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 12,
     slug: "the-hanged-man",
+    imagePath: "/cards/12-the-hanged-man.png",
     name: { vi: "Người Treo Ngược", en: "The Hanged Man" },
     keywords: {
       vi: ["buông bỏ", "góc nhìn mới", "tạm dừng", "hy sinh"],
@@ -238,6 +249,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 13,
     slug: "death",
+    imagePath: "/cards/13-death.png",
     name: { vi: "Cái Chết", en: "Death" },
     keywords: {
       vi: ["kết thúc", "chuyển hóa", "buông", "tái sinh"],
@@ -255,6 +267,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 14,
     slug: "temperance",
+    imagePath: "/cards/14-temperance.png",
     name: { vi: "Tiết Chế", en: "Temperance" },
     keywords: {
       vi: ["hòa trộn", "kiên nhẫn", "chữa lành", "cân bằng"],
@@ -272,6 +285,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 15,
     slug: "the-devil",
+    imagePath: "/cards/15-the-devil.png",
     name: { vi: "Ác Quỷ", en: "The Devil" },
     keywords: {
       vi: ["giam cầm", "ham muốn", "bóng tối", "phụ thuộc"],
@@ -289,6 +303,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 16,
     slug: "the-tower",
+    imagePath: "/cards/16-the-tower.png",
     name: { vi: "Tháp", en: "The Tower" },
     keywords: {
       vi: ["sóng gió", "sự thật", "đổ vỡ", "thức tỉnh"],
@@ -306,6 +321,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 17,
     slug: "the-star",
+    imagePath: "/cards/17-the-star.png",
     name: { vi: "Ngôi Sao", en: "The Star" },
     keywords: {
       vi: ["hy vọng", "chữa lành", "hướng dẫn", "bình yên"],
@@ -323,6 +339,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 18,
     slug: "the-moon",
+    imagePath: "/cards/18-the-moon.png",
     name: { vi: "Mặt Trăng", en: "The Moon" },
     keywords: {
       vi: ["ảo ảnh", "giấc mơ", "sợ hãi", "bản năng"],
@@ -340,6 +357,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 19,
     slug: "the-sun",
+    imagePath: "/cards/19-the-sun.png",
     name: { vi: "Mặt Trời", en: "The Sun" },
     keywords: {
       vi: ["vui vẻ", "rõ ràng", "thành công", "sức sống"],
@@ -353,11 +371,11 @@ export const majorArcana: MajorArcanaCard[] = [
       vi: "Vui bị che khuất hoặc kỳ vọng quá cao. Tìm niềm vui nhỏ trong ngày thường.",
       en: "Joy dimmed or inflated expectations. Find small delights in the everyday.",
     },
-    imagePath: "/cards/19-the-sun.jpg",
   },
   {
     id: 20,
     slug: "judgement",
+    imagePath: "/cards/20-judgement.png",
     name: { vi: "Phán Xét", en: "Judgement" },
     keywords: {
       vi: ["gọi hồi", "thức tỉnh", "tha thứ", "tái sinh"],
@@ -375,6 +393,7 @@ export const majorArcana: MajorArcanaCard[] = [
   {
     id: 21,
     slug: "the-world",
+    imagePath: "/cards/21-the-world.png",
     name: { vi: "Thế Giới", en: "The World" },
     keywords: {
       vi: ["hoàn thành", "tích hợp", "du lịch", "trọn vẹn"],
