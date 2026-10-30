@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { PetTarotApp } from "@/components/PetTarotApp";
 
 export const metadata = {
@@ -6,5 +7,15 @@ export const metadata = {
 };
 
 export default function ReadingPage() {
-  return <PetTarotApp />;
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center text-sm text-slate-400">
+          Loading reading room…
+        </div>
+      }
+    >
+      <PetTarotApp />
+    </Suspense>
+  );
 }

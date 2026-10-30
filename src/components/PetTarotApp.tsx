@@ -2,6 +2,7 @@
 
 import {
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -9,6 +10,7 @@ import {
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { petConfig } from "@/config/pet";
 import { topicLenses } from "@/data/topic-lenses";
 import { useI18n } from "@/lib/i18n";
@@ -25,6 +27,7 @@ import { captureElementAsPng } from "@/lib/export-reading";
 import {
   getSpreadPositions,
   getSpreadPositionLabels,
+  parseSpreadId,
   saveJournalEntry,
   slotCountForSpread,
   spreads,
@@ -107,25 +110,33 @@ function readSharedReadingBootstrap(): SharedReadingBootstrap | null {
 }
 
 export function PetTarotApp() {
+  const searchParams = useSearchParams();
   const shared = useSyncExternalStore(
     subscribeHashNoop,
     readSharedReadingBootstrap,
     () => null,
   );
+  const urlSpread = parseSpreadId(searchParams.get("spread"));
 
   return (
     <PetTarotAppInner
-      key={shared ? `shared-${shared.key}` : "default"}
+      key={shared ? `shared-${shared.key}` : "live"}
       initialShared={shared}
+      urlSpread={urlSpread}
     />
   );
 }
 
 type PetTarotAppInnerProps = {
   initialShared: SharedReadingBootstrap | null;
+  urlSpread: SpreadId;
 };
 
-function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
+function PetTarotAppInner({
+  initialShared,
+  urlSpread,
+}: PetTarotAppInnerProps) {
+  const router = useRouter();
   const { locale, setLocale, t } = useI18n();
   const { muted, toggleMute, playFlip, unlockAudio } = useAudio();
   const {
@@ -135,12 +146,13 @@ function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
     reduceMotion,
   } = useSettings();
 
+  const startingSpread = initialShared?.spread ?? urlSpread;
+  const startingCount = slotCountForSpread(startingSpread);
+
   const [phase, setPhase] = useState<Phase>(
     initialShared ? "reading" : "setup",
   );
-  const [spread, setSpread] = useState<SpreadId>(
-    initialShared?.spread ?? "three",
-  );
+  const [spread, setSpread] = useState<SpreadId>(startingSpread);
   const [topic, setTopic] = useState<TopicId>(
     initialShared?.topic ?? "general",
   );
@@ -149,10 +161,10 @@ function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
 
   const [deck, setDeck] = useState<DeckCard[]>([]);
   const [slots, setSlots] = useState<(DeckCard | null)[]>(
-    () => initialShared?.slots ?? emptySlots(3),
+    () => initialShared?.slots ?? emptySlots(startingCount),
   );
   const [flipped, setFlipped] = useState(
-    () => initialShared?.flipped ?? emptyFlipped(3),
+    () => initialShared?.flipped ?? emptyFlipped(startingCount),
   );
   const [shuffling, setShuffling] = useState(false);
   const [modalSlot, setModalSlot] = useState<number | null>(null);
@@ -177,6 +189,41 @@ function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
     [deck, slots],
   );
 
+  const syncSpreadInUrl = useCallback(
+    (nextSpread: SpreadId) => {
+      const params = new URLSearchParams(
+        typeof window !== "undefined" ? window.location.search : "",
+      );
+      params.set("spread", nextSpread);
+      const hash =
+        typeof window !== "undefined" ? window.location.hash : "";
+      router.replace(`/reading?${params.toString()}${hash}`, {
+        scroll: false,
+      });
+    },
+    [router],
+  );
+
+  const applySpread = useCallback((nextSpread: SpreadId) => {
+    setSpread(nextSpread);
+    const n = slotCountForSpread(nextSpread);
+    setSlots(emptySlots(n));
+    setFlipped(emptyFlipped(n));
+  }, []);
+
+  // Home featured links (and soft navigations) pass ?spread= — apply while still in setup.
+  useEffect(() => {
+    if (initialShared) return;
+    if (phase !== "setup") return;
+    if (urlSpread === spread) return;
+    applySpread(urlSpread);
+  }, [urlSpread, phase, spread, initialShared, applySpread]);
+
+  const selectSpread = (nextSpread: SpreadId) => {
+    applySpread(nextSpread);
+    syncSpreadInUrl(nextSpread);
+  };
+
   const resetSlotsForSpread = (nextSpread: SpreadId) => {
     const n = slotCountForSpread(nextSpread);
     setSlots(emptySlots(n));
@@ -198,6 +245,7 @@ function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
     setPhase("deck");
     setJournalSaved(false);
     setShareOk(false);
+    syncSpreadInUrl(spread);
   };
 
   const runShuffle = useCallback(() => {
@@ -230,10 +278,18 @@ function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
   const drawFromDeck = (card: DeckCard) => {
     if (allDrawn) return;
     unlockAudio();
+    const needed = slotCount;
     setSlots((prev) => {
-      const idx = prev.findIndex((s) => s === null);
+      const base =
+        prev.length === needed
+          ? prev
+          : [
+              ...prev.slice(0, needed),
+              ...emptySlots(Math.max(0, needed - prev.length)),
+            ];
+      const idx = base.findIndex((s) => s === null);
       if (idx === -1) return prev;
-      const next = [...prev];
+      const next = [...base];
       next[idx] = card;
       return next;
     });
@@ -391,10 +447,7 @@ function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
                   <button
                     key={id}
                     type="button"
-                    onClick={() => {
-                      setSpread(id);
-                      resetSlotsForSpread(id);
-                    }}
+                    onClick={() => selectSpread(id)}
                     className={`flex gap-4 rounded-xl border px-4 py-3 text-left text-sm transition ${
                       spread === id
                         ? "border-[var(--color-antique-gold)]/50 bg-[rgba(198,161,91,0.1)] text-[var(--color-warm-ivory)]"
@@ -405,6 +458,10 @@ function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
                     <span className="min-w-0 flex-1">
                       <span className="font-serif font-semibold text-[var(--color-soft-gold)]">
                         {spreads[id].label[locale]}
+                      </span>
+                      <span className="mt-1 block text-[11px] uppercase tracking-wider text-[var(--color-antique-gold)]/80">
+                        {spreads[id].positions.length}{" "}
+                        {t("lá", "cards")}
                       </span>
                       <span className="mt-1 block text-xs opacity-90">
                         {spreads[id].blurb[locale]}

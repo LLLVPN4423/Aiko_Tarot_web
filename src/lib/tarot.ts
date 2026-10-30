@@ -112,6 +112,19 @@ export function slotCountForSpread(spread: SpreadId): number {
   return spreads[spread].positions.length;
 }
 
+const SPREAD_IDS = Object.keys(spreads) as SpreadId[];
+
+export function isSpreadId(value: string | null | undefined): value is SpreadId {
+  return !!value && SPREAD_IDS.includes(value as SpreadId);
+}
+
+export function parseSpreadId(
+  value: string | null | undefined,
+  fallback: SpreadId = "three",
+): SpreadId {
+  return isSpreadId(value) ? value : fallback;
+}
+
 export function getActiveMajorCards(): TarotCard[] {
   return majorCards;
 }

@@ -44,7 +44,7 @@ export function HomeGateway() {
             )}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/reading" className="btn-primary px-8 py-3">
+            <Link href="/reading?spread=three" className="btn-primary px-8 py-3">
               {t("Bắt đầu xem bài", "Begin your reading")}
             </Link>
             <Link href="/library" className="btn-ghost px-6 py-3">
@@ -92,14 +92,15 @@ export function HomeGateway() {
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {featuredSpreads.map((id) => (
-            <Link key={id} href="/reading" className="group">
+            <Link key={id} href={`/reading?spread=${id}`} className="group">
               <GlassPanel className="transition group-hover:border-[var(--color-antique-gold)]/45">
                 <SpreadPreview spread={id} active />
                 <p className="mt-3 font-serif text-sm text-[var(--color-soft-gold)]">
                   {spreads[id].label[locale]}
                 </p>
                 <p className="mt-1 text-xs text-[var(--color-muted-text)]">
-                  {spreads[id].blurb[locale]}
+                  {spreads[id].positions.length}{" "}
+                  {t("lá", "cards")} · {spreads[id].blurb[locale]}
                 </p>
               </GlassPanel>
             </Link>
