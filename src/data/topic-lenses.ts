@@ -59,8 +59,25 @@ export const topicLenses: Record<TopicId, TopicLens> = {
       ],
     },
   },
+  spirituality: {
+    label: { vi: "Tâm linh", en: "Spirituality" },
+    intro: {
+      vi: "Kết nối với điều lớn hơn bản thân — ý nghĩa, nghi lễ và lòng biết ơn.",
+      en: "Connection to something larger — meaning, ritual, and gratitude.",
+    },
+    prompts: {
+      vi: [
+        "Tôi cần nuôi dưỡng điều gì trong hành trình tâm linh?",
+        "Dấu hiệu nào đang mời tôi tin tưởng sâu hơn?",
+      ],
+      en: [
+        "What wants nurturing on my spiritual path?",
+        "What sign invites deeper trust?",
+      ],
+    },
+  },
   self: {
-    label: { vi: "Bản thân", en: "Self" },
+    label: { vi: "Phát triển bản thân", en: "Personal growth" },
     intro: {
       vi: "Nội tâm, chữa lành và bản sắc — làm rõ bạn đang trở thành ai.",
       en: "Inner life, healing, and identity — who you are becoming.",

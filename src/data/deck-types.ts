@@ -13,4 +13,9 @@ export type TarotCardBase = {
   reversed: Record<Locale, string>;
   imagePath?: string;
   suit?: Suit;
+  symbolism?: Record<Locale, string>;
+  loveMeaning?: Record<Locale, string>;
+  careerMeaning?: Record<Locale, string>;
+  personalGrowthMeaning?: Record<Locale, string>;
+  spiritualityMeaning?: Record<Locale, string>;
 };

@@ -1,10 +1,9 @@
-import { majorArcana, type MajorArcanaCard } from "@/data/major-arcana";
-import { minorArcana } from "@/data/minor-arcana";
+import { allTarotCards, majorCards, type TarotCard } from "@/data/deck-index";
 import type { DeckMode } from "@/lib/settings";
 
 export type DeckCard = {
   uid: string;
-  card: MajorArcanaCard;
+  card: TarotCard;
   reversed: boolean;
 };
 
@@ -16,11 +15,9 @@ function shuffleInPlace<T>(arr: T[]): T[] {
   return arr;
 }
 
-export function getActiveDeckCards(deckMode: DeckMode = "major"): MajorArcanaCard[] {
-  if (deckMode === "full" && minorArcana.length > 0) {
-    return majorArcana;
-  }
-  return majorArcana;
+export function getActiveDeckCards(deckMode: DeckMode = "major"): TarotCard[] {
+  if (deckMode === "full") return allTarotCards;
+  return majorCards;
 }
 
 export function createShuffledDeck(options?: {
@@ -53,7 +50,7 @@ export function deckCardsFromShared(
   const built: DeckCard[] = [];
   for (let index = 0; index < cards.length; index++) {
     const c = cards[index];
-    const card = majorArcana.find((m) => m.id === c.id);
+    const card = allTarotCards.find((m) => m.id === c.id);
     if (!card) return null;
     built.push({
       uid: `shared-${index}-${c.id}`,

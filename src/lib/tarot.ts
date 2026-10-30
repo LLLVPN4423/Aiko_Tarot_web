@@ -1,15 +1,25 @@
-import { majorArcana, type MajorArcanaCard, type Locale } from "@/data/major-arcana";
-import { minorArcana } from "@/data/minor-arcana";
+import type { Locale } from "@/data/major-arcana";
+import {
+  allTarotCards,
+  cardById as deckCardById,
+  majorCards,
+  type TarotCard,
+} from "@/data/deck-index";
 
 export type DrawnCard = {
-  card: MajorArcanaCard;
+  card: TarotCard;
   reversed: boolean;
   position?: string;
 };
 
-export type SpreadId = "single" | "three" | "cross";
+export type SpreadId = "single" | "three" | "cross" | "five" | "celtic";
 
-export type TopicId = "general" | "love" | "career" | "self";
+export type TopicId =
+  | "general"
+  | "love"
+  | "career"
+  | "self"
+  | "spirituality";
 
 export const spreads: Record<
   SpreadId,
@@ -40,7 +50,7 @@ export const spreads: Record<
     ],
   },
   cross: {
-    label: { vi: "5 lá — dạng thập", en: "5-card cross" },
+    label: { vi: "5 lá — mở rộng", en: "5-card expanded" },
     blurb: {
       vi: "Tình huống, thách thức, quá khứ, tương lai gần và lời khuyên.",
       en: "Situation, challenge, past, near future, and advice.",
@@ -51,6 +61,39 @@ export const spreads: Record<
       { vi: "Quá khứ", en: "Past influence" },
       { vi: "Tương lai gần", en: "Near future" },
       { vi: "Lời khuyên", en: "Advice" },
+    ],
+  },
+  five: {
+    label: { vi: "5 lá — mở rộng", en: "5-card expanded" },
+    blurb: {
+      vi: "Đọc sâu hơn ba lá — thêm thách thức và lời khuyên.",
+      en: "Deeper than three cards — adds challenge and counsel.",
+    },
+    positions: [
+      { vi: "Tình huống", en: "Situation" },
+      { vi: "Thách thức", en: "Challenge" },
+      { vi: "Quá khứ", en: "Past influence" },
+      { vi: "Tương lai gần", en: "Near future" },
+      { vi: "Lời khuyên", en: "Advice" },
+    ],
+  },
+  celtic: {
+    label: { vi: "Celtic Cross · 10 lá", en: "Celtic Cross · 10 cards" },
+    blurb: {
+      vi: "Trải bài cổ điển — bức tranh đầy đủ tình huống và kết quả.",
+      en: "Classic spread — a full picture of situation and outcome.",
+    },
+    positions: [
+      { vi: "Hiện tại", en: "Present" },
+      { vi: "Thách thức", en: "Challenge" },
+      { vi: "Mục tiêu ý thức", en: "Conscious aim" },
+      { vi: "Nền tảng", en: "Foundation" },
+      { vi: "Quá khứ", en: "Past" },
+      { vi: "Tương lai gần", en: "Near future" },
+      { vi: "Bản thân", en: "Self" },
+      { vi: "Môi trường", en: "Environment" },
+      { vi: "Hy vọng & lo sợ", en: "Hopes & fears" },
+      { vi: "Kết quả", en: "Outcome" },
     ],
   },
 };
@@ -69,15 +112,13 @@ export function slotCountForSpread(spread: SpreadId): number {
   return spreads[spread].positions.length;
 }
 
-export function getActiveMajorCards(): MajorArcanaCard[] {
-  return majorArcana;
+export function getActiveMajorCards(): TarotCard[] {
+  return majorCards;
 }
 
 export function getActiveDeckSize(deckMode: "major" | "full"): number {
-  if (deckMode === "full" && minorArcana.length > 0) {
-    return majorArcana.length + minorArcana.length;
-  }
-  return majorArcana.length;
+  if (deckMode === "full") return allTarotCards.length;
+  return majorCards.length;
 }
 
 function shuffleInPlace<T>(arr: T[]): T[] {
@@ -95,7 +136,7 @@ export function drawReading(
   const count = spreads[spread].positions.length;
   const reversedEnabled = options?.reversedEnabled ?? true;
   const reversedChance = reversedEnabled ? (options?.reversedChance ?? 0.35) : 0;
-  const deck = shuffleInPlace([...majorArcana]).slice(0, count);
+  const deck = shuffleInPlace([...majorCards]).slice(0, count);
 
   return deck.map((card, index) => ({
     card,
@@ -172,6 +213,6 @@ export function updateJournalNote(id: string, note: string): void {
   );
 }
 
-export function cardById(id: number): MajorArcanaCard | undefined {
-  return majorArcana.find((c) => c.id === id);
+export function cardById(id: number): TarotCard | undefined {
+  return deckCardById(id);
 }

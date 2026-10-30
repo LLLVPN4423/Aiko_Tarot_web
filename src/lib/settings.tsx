@@ -4,9 +4,8 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -37,40 +36,67 @@ type SettingsContextValue = AppSettings & {
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
 
+type SettingsListener = () => void;
+const settingsListeners = new Set<SettingsListener>();
+
+/** Cached snapshot — getSnapshot must return stable refs between notifications. */
+let cachedSettings: AppSettings = defaults;
+let cacheHydrated = false;
+
+function subscribeSettings(listener: SettingsListener) {
+  settingsListeners.add(listener);
+  return () => {
+    settingsListeners.delete(listener);
+  };
+}
+
+function notifySettingsListeners() {
+  settingsListeners.forEach((listener) => listener());
+}
+
+function parseSettings(raw: string | null): AppSettings {
+  if (!raw) return defaults;
+  try {
+    return { ...defaults, ...JSON.parse(raw) };
+  } catch {
+    return defaults;
+  }
+}
+
+function readSettingsFromStorage(): AppSettings {
+  if (typeof window === "undefined") return defaults;
+  if (!cacheHydrated) {
+    cachedSettings = parseSettings(localStorage.getItem(STORAGE_KEY));
+    cacheHydrated = true;
+  }
+  return cachedSettings;
+}
+
+function writeSettings(next: AppSettings) {
+  cachedSettings = next;
+  cacheHydrated = true;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+  notifySettingsListeners();
+}
+
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<AppSettings>(defaults);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setSettings({ ...defaults, ...JSON.parse(raw) });
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  const persist = useCallback((next: AppSettings) => {
-    setSettings(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      /* ignore */
-    }
-  }, []);
+  const settings = useSyncExternalStore(
+    subscribeSettings,
+    readSettingsFromStorage,
+    () => defaults,
+  );
 
   const updateSettings = useCallback((patch: Partial<AppSettings>) => {
-    setSettings((prev) => {
-      const next = { ...prev, ...patch };
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
+    writeSettings({ ...readSettingsFromStorage(), ...patch });
   }, []);
 
-  const resetSettings = useCallback(() => persist(defaults), [persist]);
+  const resetSettings = useCallback(() => {
+    writeSettings(defaults);
+  }, []);
 
   const value = useMemo(
     () => ({ ...settings, updateSettings, resetSettings }),

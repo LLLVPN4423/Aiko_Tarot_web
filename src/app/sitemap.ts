@@ -1,14 +1,16 @@
 import type { MetadataRoute } from "next";
-import { majorArcana } from "@/data/major-arcana";
+import { allTarotCards } from "@/data/deck-index";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/library", "/journal", "/about"].map((path) => ({
-    url: `${base}${path || "/"}`,
-    lastModified: new Date(),
-  }));
-  const cards = majorArcana.map((c) => ({
+  const staticRoutes = ["", "/reading", "/library", "/journal", "/about"].map(
+    (path) => ({
+      url: `${base}${path || "/"}`,
+      lastModified: new Date(),
+    }),
+  );
+  const cards = allTarotCards.map((c) => ({
     url: `${base}/library/${c.slug}`,
     lastModified: new Date(),
   }));

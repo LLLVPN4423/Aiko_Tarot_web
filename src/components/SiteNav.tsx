@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 
 const links = [
-  { href: "/", vi: "Xem bài", en: "Reading" },
+  { href: "/", vi: "Trang chủ", en: "Home" },
+  { href: "/reading", vi: "Phòng xem bài", en: "Reading" },
   { href: "/library", vi: "Bộ bài", en: "Library" },
   { href: "/journal", vi: "Nhật ký", en: "Journal" },
   { href: "/about", vi: "Giới thiệu", en: "About" },
@@ -18,11 +19,11 @@ export function SiteNav({ onOpenSettings }: Props) {
   const { locale } = useI18n();
 
   return (
-    <nav className="sticky top-0 z-40 border-b border-white/10 bg-[#080910]/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-1 px-4 py-3 sm:justify-between">
+    <nav className="sticky top-0 z-40 border-b border-[rgba(198,161,91,0.12)] bg-[var(--color-obsidian)]/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-2 px-4 py-3 sm:justify-between">
         <Link
           href="/"
-          className="font-serif text-sm font-semibold tracking-wide text-amber-100"
+          className="font-serif text-sm font-semibold tracking-[0.12em] text-[var(--color-soft-gold)]"
         >
           Celestial Cat Tarot
         </Link>
@@ -38,8 +39,8 @@ export function SiteNav({ onOpenSettings }: Props) {
                 href={link.href}
                 className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                   active
-                    ? "bg-cyan-500/25 text-cyan-100"
-                    : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+                    ? "bg-[rgba(198,161,91,0.18)] text-[var(--color-warm-ivory)]"
+                    : "text-[var(--color-muted-text)] hover:bg-white/5 hover:text-[var(--color-warm-ivory)]"
                 }`}
               >
                 {locale === "vi" ? link.vi : link.en}
@@ -50,10 +51,10 @@ export function SiteNav({ onOpenSettings }: Props) {
             <button
               type="button"
               onClick={onOpenSettings}
-              className="rounded-full px-3 py-1.5 text-xs text-slate-400 hover:bg-white/5"
+              className="rounded-full px-3 py-1.5 text-xs text-[var(--color-muted-lavender)] hover:bg-white/5"
               aria-label="Settings"
             >
-              ⚙
+              {locale === "vi" ? "Cài đặt" : "Settings"}
             </button>
           )}
         </div>

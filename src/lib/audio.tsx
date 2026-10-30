@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -28,6 +29,46 @@ type AudioContextValue = {
 };
 
 const AudioCtx = createContext<AudioContextValue | null>(null);
+
+type MuteListener = () => void;
+const muteListeners = new Set<MuteListener>();
+
+function subscribeMuted(listener: MuteListener) {
+  muteListeners.add(listener);
+  return () => muteListeners.delete(listener);
+}
+
+function notifyMutedListeners() {
+  muteListeners.forEach((listener) => listener());
+}
+
+let cachedMuted = true;
+let mutedHydrated = false;
+
+function readMutedFromStorage(): boolean {
+  if (typeof window === "undefined") return true;
+  if (!mutedHydrated) {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      cachedMuted = stored !== "0";
+    } catch {
+      cachedMuted = true;
+    }
+    mutedHydrated = true;
+  }
+  return cachedMuted;
+}
+
+function writeMutedToStorage(muted: boolean) {
+  cachedMuted = muted;
+  mutedHydrated = true;
+  try {
+    localStorage.setItem(STORAGE_KEY, muted ? "1" : "0");
+  } catch {
+    /* ignore */
+  }
+  notifyMutedListeners();
+}
 
 function useWebAudioFallback() {
   const ctxRef = useRef<AudioContext | null>(null);
@@ -97,22 +138,17 @@ function useWebAudioFallback() {
 }
 
 export function AudioProvider({ children }: { children: ReactNode }) {
-  const [muted, setMuted] = useState(true);
+  const muted = useSyncExternalStore(
+    subscribeMuted,
+    readMutedFromStorage,
+    () => true,
+  );
   const [unlocked, setUnlocked] = useState(false);
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const hoverRef = useRef<HTMLAudioElement | null>(null);
   const flipRef = useRef<HTMLAudioElement | null>(null);
   const bgmOkRef = useRef(false);
   const fallback = useWebAudioFallback();
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored === "0") setMuted(false);
-    } catch {
-      /* ignore */
-    }
-  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -137,11 +173,6 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   }, [fallback]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, muted ? "1" : "0");
-    } catch {
-      /* ignore */
-    }
     if (!unlocked) return;
 
     if (muted) {
@@ -166,32 +197,32 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     fallback.ensureCtx()?.resume();
   }, [fallback]);
 
-  const playOneShot = (
-    ref: React.RefObject<HTMLAudioElement | null>,
-    fallbackFreq: number,
-  ) => {
-    if (muted || !unlocked) return;
-    const el = ref.current;
-    if (el) {
-      el.currentTime = 0;
-      el.play().catch(() => fallback.playTone(fallbackFreq, 0.12, 0.06));
-    } else {
-      fallback.playTone(fallbackFreq, 0.12, 0.06);
-    }
-  };
+  const playOneShot = useCallback(
+    (ref: React.RefObject<HTMLAudioElement | null>, fallbackFreq: number) => {
+      if (muted || !unlocked) return;
+      const el = ref.current;
+      if (el) {
+        el.currentTime = 0;
+        el.play().catch(() => fallback.playTone(fallbackFreq, 0.12, 0.06));
+      } else {
+        fallback.playTone(fallbackFreq, 0.12, 0.06);
+      }
+    },
+    [muted, unlocked, fallback],
+  );
 
   const toggleMute = useCallback(() => {
     setUnlocked(true);
-    setMuted((m) => !m);
+    writeMutedToStorage(!readMutedFromStorage());
   }, []);
 
   const playHover = useCallback(
     () => playOneShot(hoverRef, 520),
-    [muted, unlocked],
+    [playOneShot],
   );
   const playFlip = useCallback(
     () => playOneShot(flipRef, 280),
-    [muted, unlocked],
+    [playOneShot],
   );
 
   const value = useMemo(

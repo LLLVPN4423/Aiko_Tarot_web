@@ -20,13 +20,23 @@ export function JournalPageClient() {
   const [entries, setEntries] = useState<JournalEntry[]>(() => loadJournal());
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftNote, setDraftNote] = useState("");
+  const [search, setSearch] = useState("");
 
   const refresh = () => setEntries(loadJournal());
 
-  const sorted = useMemo(
-    () => [...entries].sort((a, b) => b.at.localeCompare(a.at)),
-    [entries],
-  );
+  const sorted = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return [...entries]
+      .filter((e) => {
+        if (!q) return true;
+        return (
+          e.question?.toLowerCase().includes(q) ||
+          e.note?.toLowerCase().includes(q) ||
+          spreads[e.spread].label.en.toLowerCase().includes(q)
+        );
+      })
+      .sort((a, b) => b.at.localeCompare(a.at));
+  }, [entries, search]);
 
   const startEdit = (e: JournalEntry) => {
     setEditingId(e.id);
@@ -50,7 +60,10 @@ export function JournalPageClient() {
         <p className="text-slate-400">
           {t("Chưa có lần xem bài nào được lưu.", "No saved readings yet.")}
         </p>
-        <Link href="/" className="mt-4 inline-block text-cyan-400 underline">
+        <Link
+          href="/reading"
+          className="mt-4 inline-block text-[var(--color-antique-gold)] underline"
+        >
           {t("Xem bài ngay", "Start a reading")}
         </Link>
       </GlassPanel>
@@ -59,6 +72,13 @@ export function JournalPageClient() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
+      <input
+        type="search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder={t("Tìm câu hỏi hoặc ghi chú...", "Search question or notes...")}
+        className="rounded-lg border border-white/10 bg-black/30 px-4 py-2 text-sm"
+      />
       {sorted.map((entry) => (
         <GlassPanel key={entry.id}>
           <div className="flex flex-wrap items-start justify-between gap-2">
@@ -79,7 +99,7 @@ export function JournalPageClient() {
             </div>
             <div className="flex flex-wrap gap-3 text-xs">
               <Link
-                href={`/${encodeReadingToHash({
+                href={`/reading${encodeReadingToHash({
                   spread: entry.spread,
                   topic: entry.topic,
                   cards: entry.cards,

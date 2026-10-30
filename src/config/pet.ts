@@ -7,7 +7,7 @@ export const petConfig = {
     en: "Celestial Cat Tarot",
   },
   tagline: {
-    vi: "22 lá Major Arcana — minh họa vũ trụ, nhân vật chính là chú mèo tabby của bạn",
-    en: "22 Major Arcana — celestial fine art starring your tabby companion",
+    vi: "Hành trình qua các vì sao — bộ 72 lá Celestial Cat, xem bài trực tuyến",
+    en: "A journey through the stars — 72-card Celestial Cat deck, online readings",
   },
 };

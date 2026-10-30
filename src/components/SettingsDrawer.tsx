@@ -57,10 +57,29 @@ export function SettingsDrawer({ open, onClose }: Props) {
             onChange={(e) => s.updateSettings({ reduceMotion: e.target.checked })}
           />
         </label>
+        <label className="mt-4 block text-sm">
+          <span>{t("Bộ bài", "Deck")}</span>
+          <select
+            className="mt-2 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm"
+            value={s.deckMode}
+            onChange={(e) =>
+              s.updateSettings({
+                deckMode: e.target.value === "full" ? "full" : "major",
+              })
+            }
+          >
+            <option value="major">
+              {t("Major Arcana (22)", "Major Arcana (22)")}
+            </option>
+            <option value="full">
+              {t("Đầy đủ 72 lá", "Full 72-card deck")}
+            </option>
+          </select>
+        </label>
         <button
           type="button"
           onClick={() => s.updateSettings({ onboardingDone: false })}
-          className="mt-8 text-xs text-cyan-300 underline"
+          className="mt-8 text-xs text-[var(--color-antique-gold)] underline"
         >
           {t("Xem lại hướng dẫn", "Replay onboarding")}
         </button>

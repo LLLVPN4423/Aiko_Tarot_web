@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { petConfig } from "@/config/pet";
@@ -36,10 +42,12 @@ import { TarotCardFace } from "./TarotCardFace";
 import { GlassPanel } from "./GlassPanel";
 import { CardModal } from "./CardModal";
 import { DailyCardBanner } from "./DailyCardBanner";
+import { ReadingInterpretation } from "./ReadingInterpretation";
+import { SpreadPreview } from "./SpreadPreview";
 
 type Phase = "setup" | "deck" | "reading";
 
-const spreadIds: SpreadId[] = ["single", "three", "cross"];
+const spreadIds: SpreadId[] = ["single", "three", "five", "celtic"];
 
 function MuteIcon({ muted }: { muted: boolean }) {
   return <span className="text-lg" aria-hidden>{muted ? "🔇" : "🔊"}</span>;
@@ -48,23 +56,104 @@ function MuteIcon({ muted }: { muted: boolean }) {
 function gridClassForCount(n: number): string {
   if (n === 1) return "grid-cols-1 place-items-center";
   if (n === 3) return "grid-cols-1 sm:grid-cols-3";
-  return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
+  if (n === 5) return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
+  if (n >= 10) return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4";
+  return "grid-cols-2 sm:grid-cols-3";
+}
+
+type SharedReadingBootstrap = {
+  spread: SpreadId;
+  topic: TopicId;
+  slots: (DeckCard | null)[];
+  flipped: boolean[];
+  key: string;
+};
+
+const subscribeHashNoop = () => () => {};
+
+let cachedShared: SharedReadingBootstrap | null | undefined;
+let cachedSharedHash: string | undefined;
+
+function readSharedReadingBootstrap(): SharedReadingBootstrap | null {
+  if (typeof window === "undefined") return null;
+  const hash = window.location.hash;
+  if (cachedSharedHash === hash && cachedShared !== undefined) {
+    return cachedShared;
+  }
+  cachedSharedHash = hash;
+  const payload = decodeReadingFromHash(hash);
+  if (!payload) {
+    cachedShared = null;
+    return null;
+  }
+  const n = slotCountForSpread(payload.spread);
+  if (payload.cards.length !== n) {
+    cachedShared = null;
+    return null;
+  }
+  const built = deckCardsFromShared(payload.cards);
+  if (!built) {
+    cachedShared = null;
+    return null;
+  }
+  cachedShared = {
+    spread: payload.spread,
+    topic: payload.topic,
+    slots: built,
+    flipped: built.map(() => true),
+    key: built.map((c) => c.uid).join("-"),
+  };
+  return cachedShared;
 }
 
 export function PetTarotApp() {
+  const shared = useSyncExternalStore(
+    subscribeHashNoop,
+    readSharedReadingBootstrap,
+    () => null,
+  );
+
+  return (
+    <PetTarotAppInner
+      key={shared ? `shared-${shared.key}` : "default"}
+      initialShared={shared}
+    />
+  );
+}
+
+type PetTarotAppInnerProps = {
+  initialShared: SharedReadingBootstrap | null;
+};
+
+function PetTarotAppInner({ initialShared }: PetTarotAppInnerProps) {
   const { locale, setLocale, t } = useI18n();
   const { muted, toggleMute, playFlip, unlockAudio } = useAudio();
-  const settings = useSettings();
+  const {
+    reversedChance,
+    reversedEnabled,
+    deckMode,
+    reduceMotion,
+  } = useSettings();
 
-  const [phase, setPhase] = useState<Phase>("setup");
-  const [spread, setSpread] = useState<SpreadId>("three");
-  const [topic, setTopic] = useState<TopicId>("general");
+  const [phase, setPhase] = useState<Phase>(
+    initialShared ? "reading" : "setup",
+  );
+  const [spread, setSpread] = useState<SpreadId>(
+    initialShared?.spread ?? "three",
+  );
+  const [topic, setTopic] = useState<TopicId>(
+    initialShared?.topic ?? "general",
+  );
   const [question, setQuestion] = useState("");
   const slotCount = slotCountForSpread(spread);
 
   const [deck, setDeck] = useState<DeckCard[]>([]);
-  const [slots, setSlots] = useState<(DeckCard | null)[]>(() => emptySlots(3));
-  const [flipped, setFlipped] = useState(() => emptyFlipped(3));
+  const [slots, setSlots] = useState<(DeckCard | null)[]>(
+    () => initialShared?.slots ?? emptySlots(3),
+  );
+  const [flipped, setFlipped] = useState(
+    () => initialShared?.flipped ?? emptyFlipped(3),
+  );
   const [shuffling, setShuffling] = useState(false);
   const [modalSlot, setModalSlot] = useState<number | null>(null);
   const [note, setNote] = useState("");
@@ -73,23 +162,6 @@ export function PetTarotApp() {
   const [shareOk, setShareOk] = useState(false);
 
   const exportRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const payload = decodeReadingFromHash(window.location.hash);
-    if (!payload) return;
-    const n = slotCountForSpread(payload.spread);
-    if (payload.cards.length !== n) return;
-    const built = deckCardsFromShared(payload.cards);
-    if (!built) return;
-    setSpread(payload.spread);
-    setTopic(payload.topic);
-    setSlots(built);
-    setFlipped(built.map(() => true));
-    setDeck([]);
-    setPhase("reading");
-    setJournalSaved(false);
-    setShareOk(false);
-  }, []);
 
   const positions = useMemo(
     () => getSpreadPositions(spread, locale),
@@ -116,9 +188,9 @@ export function PetTarotApp() {
     const n = slotCountForSpread(spread);
     setDeck(
       createShuffledDeck({
-        reversedChance: settings.reversedChance,
-        reversedEnabled: settings.reversedEnabled,
-        deckMode: settings.deckMode,
+        reversedChance,
+        reversedEnabled,
+        deckMode,
       }),
     );
     setSlots(emptySlots(n));
@@ -138,14 +210,22 @@ export function PetTarotApp() {
     window.setTimeout(() => {
       setDeck(
         createShuffledDeck({
-          reversedChance: settings.reversedChance,
-          reversedEnabled: settings.reversedEnabled,
-          deckMode: settings.deckMode,
+          reversedChance,
+          reversedEnabled,
+          deckMode,
         }),
       );
       setShuffling(false);
-    }, settings.reduceMotion ? 200 : 900);
-  }, [unlockAudio, spread, settings]);
+    }, reduceMotion ? 200 : 900);
+  }, [
+    unlockAudio,
+    spread,
+    reversedChance,
+    reversedEnabled,
+    deckMode,
+    reduceMotion,
+    setModalSlot,
+  ]);
 
   const drawFromDeck = (card: DeckCard) => {
     if (allDrawn) return;
@@ -214,7 +294,7 @@ export function PetTarotApp() {
       .filter((s): s is DeckCard => s !== null)
       .map((s) => ({ id: s.card.id, reversed: s.reversed }));
     const hash = encodeReadingToHash({ spread, topic, cards });
-    const url = `${window.location.origin}${window.location.pathname}${hash}`;
+    const url = `${window.location.origin}/reading${hash}`;
     const names = cards
       .map((c) => {
         const card = slots.find((s) => s?.card.id === c.id)?.card;
@@ -244,12 +324,12 @@ export function PetTarotApp() {
 
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
-          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-cyan-400/40 shadow-[0_0_24px_rgba(34,211,238,0.35)] ring-2 ring-purple-500/30">
+          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-[var(--color-antique-gold)]/45 shadow-[0_0_24px_rgba(198,161,91,0.28)] ring-2 ring-[var(--color-cosmic-violet)]/40">
             <Image
-              src="/pet/face-closeup.png"
+              src="/pet/celestial-mascot.png"
               alt={petConfig.name}
               fill
-              className="object-cover"
+              className="object-cover object-top"
               priority
               sizes="64px"
             />
@@ -315,15 +395,20 @@ export function PetTarotApp() {
                       setSpread(id);
                       resetSlotsForSpread(id);
                     }}
-                    className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
+                    className={`flex gap-4 rounded-xl border px-4 py-3 text-left text-sm transition ${
                       spread === id
-                        ? "border-amber-400/50 bg-amber-400/10 text-amber-100"
-                        : "border-white/10 text-slate-400 hover:border-cyan-400/30"
+                        ? "border-[var(--color-antique-gold)]/50 bg-[rgba(198,161,91,0.1)] text-[var(--color-warm-ivory)]"
+                        : "border-white/10 text-[var(--color-muted-text)] hover:border-[var(--color-antique-gold)]/30"
                     }`}
                   >
-                    <span className="font-semibold">{spreads[id].label[locale]}</span>
-                    <span className="mt-1 block text-xs opacity-80">
-                      {spreads[id].blurb[locale]}
+                    <SpreadPreview spread={id} active={spread === id} />
+                    <span className="min-w-0 flex-1">
+                      <span className="font-serif font-semibold text-[var(--color-soft-gold)]">
+                        {spreads[id].label[locale]}
+                      </span>
+                      <span className="mt-1 block text-xs opacity-90">
+                        {spreads[id].blurb[locale]}
+                      </span>
                     </span>
                   </button>
                 ))}
@@ -449,7 +534,7 @@ export function PetTarotApp() {
               </h3>
               <div
                 className={`mt-4 grid max-h-[420px] grid-cols-4 gap-2 overflow-y-auto sm:grid-cols-6 md:grid-cols-8 ${
-                  shuffling && !settings.reduceMotion ? "deck-shuffling" : ""
+                  shuffling && !reduceMotion ? "deck-shuffling" : ""
                 }`}
               >
                 {availableDeck.map((d, i) => (
@@ -510,28 +595,11 @@ export function PetTarotApp() {
                   </div>
                 </div>
 
-                {slots.map((s, i) =>
-                  s ? (
-                    <GlassPanel key={`read-${s.uid}`}>
-                      <h3 className="font-serif text-lg text-amber-100">
-                        {positions[i]} — {s.card.name[locale]}
-                        {s.reversed && (
-                          <span className="ml-2 text-sm text-rose-300/90">
-                            ({t("ngược", "reversed")})
-                          </span>
-                        )}
-                      </h3>
-                      <p className="mt-1 text-sm text-cyan-200/70">
-                        {s.card.keywords[locale].join(" · ")}
-                      </p>
-                      <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                        {s.reversed
-                          ? s.card.reversed[locale]
-                          : s.card.upright[locale]}
-                      </p>
-                    </GlassPanel>
-                  ) : null,
-                )}
+                <ReadingInterpretation
+                  slots={slots}
+                  positions={positions}
+                  topic={topic}
+                />
 
                 <GlassPanel>
                   <textarea

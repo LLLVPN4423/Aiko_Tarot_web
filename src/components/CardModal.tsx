@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import type { DeckCard } from "@/lib/deck";
-import type { Locale } from "@/data/major-arcana";
 import { useI18n } from "@/lib/i18n";
 import { TarotCardFace } from "./TarotCardFace";
 

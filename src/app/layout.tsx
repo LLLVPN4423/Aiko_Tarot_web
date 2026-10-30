@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s · Celestial Cat Tarot",
   },
   description:
-    "Client-side Celestial Cat Tarot — 22 Major Arcana, bilingual VI/EN, cosmic fine art.",
+    "Premium online Celestial Cat Tarot — 72-card deck, immersive reading room, bilingual VI/EN.",
   openGraph: {
     title: "Celestial Cat Tarot",
     description: "Mystical pet tarot — 22 Major Arcana in the stars.",
