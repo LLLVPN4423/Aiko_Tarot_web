@@ -25,15 +25,16 @@ import {
 } from "@/lib/deck";
 import { captureElementAsPng } from "@/lib/export-reading";
 import {
-  getSpreadPositions,
-  getSpreadPositionLabels,
-  parseSpreadId,
   saveJournalEntry,
-  slotCountForSpread,
-  spreads,
   type SpreadId,
   type TopicId,
 } from "@/lib/tarot";
+import {
+  getSpreadDef,
+  parseSpreadRegistryId,
+  spreadRegistry,
+} from "@/data/spreads/registry";
+import type { ReadingDepth } from "@/data/knowledge/types";
 import {
   decodeReadingFromHash,
   encodeReadingToHash,
@@ -50,7 +51,22 @@ import { SpreadPreview } from "./SpreadPreview";
 
 type Phase = "setup" | "deck" | "reading";
 
-const spreadIds: SpreadId[] = ["single", "three", "five", "celtic"];
+const DEPTHS: ReadingDepth[] = ["quick", "standard", "deep"];
+
+function registryToLegacy(spreadRegistryId: string): SpreadId {
+  const def = getSpreadDef(spreadRegistryId);
+  const family = def?.family ?? "three";
+  if (family === "single" || family === "five" || family === "celtic") {
+    return family;
+  }
+  return "three";
+}
+
+function legacyToRegistry(legacy: SpreadId): string {
+  if (legacy === "cross") return "five";
+  if (legacy === "three") return "three-time";
+  return legacy;
+}
 
 function MuteIcon({ muted }: { muted: boolean }) {
   return <span className="text-lg" aria-hidden>{muted ? "🔇" : "🔊"}</span>;
@@ -65,7 +81,7 @@ function gridClassForCount(n: number): string {
 }
 
 type SharedReadingBootstrap = {
-  spread: SpreadId;
+  spread: string;
   topic: TopicId;
   slots: (DeckCard | null)[];
   flipped: boolean[];
@@ -89,10 +105,15 @@ function readSharedReadingBootstrap(): SharedReadingBootstrap | null {
     cachedShared = null;
     return null;
   }
-  const n = slotCountForSpread(payload.spread);
-  if (payload.cards.length !== n) {
-    cachedShared = null;
-    return null;
+  const registryId = legacyToRegistry(payload.spread);
+  const def = getSpreadDef(registryId);
+  const n = def?.cardCount ?? payload.cards.length;
+  if (payload.cards.length !== n && payload.cards.length !== def?.cardCount) {
+    // Allow legacy lengths that match family defaults
+    if (!def || payload.cards.length !== def.cardCount) {
+      cachedShared = null;
+      return null;
+    }
   }
   const built = deckCardsFromShared(payload.cards);
   if (!built) {
@@ -100,7 +121,7 @@ function readSharedReadingBootstrap(): SharedReadingBootstrap | null {
     return null;
   }
   cachedShared = {
-    spread: payload.spread,
+    spread: registryId,
     topic: payload.topic,
     slots: built,
     flipped: built.map(() => true),
@@ -116,7 +137,7 @@ export function PetTarotApp() {
     readSharedReadingBootstrap,
     () => null,
   );
-  const urlSpread = parseSpreadId(searchParams.get("spread"));
+  const urlSpread = parseSpreadRegistryId(searchParams.get("spread"));
 
   return (
     <PetTarotAppInner
@@ -129,7 +150,7 @@ export function PetTarotApp() {
 
 type PetTarotAppInnerProps = {
   initialShared: SharedReadingBootstrap | null;
-  urlSpread: SpreadId;
+  urlSpread: string;
 };
 
 function PetTarotAppInner({
@@ -147,17 +168,21 @@ function PetTarotAppInner({
   } = useSettings();
 
   const startingSpread = initialShared?.spread ?? urlSpread;
-  const startingCount = slotCountForSpread(startingSpread);
+  const startingDef = getSpreadDef(startingSpread) ?? getSpreadDef("three-time")!;
+  const startingCount = startingDef.cardCount;
 
   const [phase, setPhase] = useState<Phase>(
     initialShared ? "reading" : "setup",
   );
-  const [spread, setSpread] = useState<SpreadId>(startingSpread);
+  const [spread, setSpread] = useState<string>(startingSpread);
   const [topic, setTopic] = useState<TopicId>(
     initialShared?.topic ?? "general",
   );
+  const [depth, setDepth] = useState<ReadingDepth>("standard");
   const [question, setQuestion] = useState("");
-  const slotCount = slotCountForSpread(spread);
+  const spreadDef = getSpreadDef(spread) ?? startingDef;
+  const slotCount = spreadDef.cardCount;
+  const legacySpread = registryToLegacy(spread);
 
   const [deck, setDeck] = useState<DeckCard[]>([]);
   const [slots, setSlots] = useState<(DeckCard | null)[]>(
@@ -176,8 +201,8 @@ function PetTarotAppInner({
   const exportRef = useRef<HTMLDivElement>(null);
 
   const positions = useMemo(
-    () => getSpreadPositions(spread, locale),
-    [spread, locale],
+    () => spreadDef.positions.map((p) => p.label[locale]),
+    [spreadDef, locale],
   );
   const lens = topicLenses[topic];
   const drawnCount = slots.filter(Boolean).length;
@@ -190,7 +215,7 @@ function PetTarotAppInner({
   );
 
   const syncSpreadInUrl = useCallback(
-    (nextSpread: SpreadId) => {
+    (nextSpread: string) => {
       const params = new URLSearchParams(
         typeof window !== "undefined" ? window.location.search : "",
       );
@@ -204,9 +229,9 @@ function PetTarotAppInner({
     [router],
   );
 
-  const applySpread = useCallback((nextSpread: SpreadId) => {
+  const applySpread = useCallback((nextSpread: string) => {
     setSpread(nextSpread);
-    const n = slotCountForSpread(nextSpread);
+    const n = getSpreadDef(nextSpread)?.cardCount ?? 3;
     setSlots(emptySlots(n));
     setFlipped(emptyFlipped(n));
   }, []);
@@ -219,20 +244,20 @@ function PetTarotAppInner({
     applySpread(urlSpread);
   }, [urlSpread, phase, spread, initialShared, applySpread]);
 
-  const selectSpread = (nextSpread: SpreadId) => {
+  const selectSpread = (nextSpread: string) => {
     applySpread(nextSpread);
     syncSpreadInUrl(nextSpread);
   };
 
-  const resetSlotsForSpread = (nextSpread: SpreadId) => {
-    const n = slotCountForSpread(nextSpread);
+  const resetSlotsForSpread = (nextSpread: string) => {
+    const n = getSpreadDef(nextSpread)?.cardCount ?? 3;
     setSlots(emptySlots(n));
     setFlipped(emptyFlipped(n));
   };
 
   const beginDeck = () => {
     unlockAudio();
-    const n = slotCountForSpread(spread);
+    const n = slotCount;
     setDeck(
       createShuffledDeck({
         reversedChance,
@@ -251,7 +276,7 @@ function PetTarotAppInner({
   const runShuffle = useCallback(() => {
     unlockAudio();
     setShuffling(true);
-    const n = slotCountForSpread(spread);
+    const n = getSpreadDef(spread)?.cardCount ?? 3;
     setSlots(emptySlots(n));
     setFlipped(emptyFlipped(n));
     setModalSlot(null);
@@ -320,12 +345,12 @@ function PetTarotAppInner({
     saveJournalEntry({
       id: crypto.randomUUID(),
       at: new Date().toISOString(),
-      spread,
+      spread: legacySpread,
       topic,
       cards: slots
         .filter((s): s is DeckCard => s !== null)
         .map((s) => ({ id: s.card.id, reversed: s.reversed })),
-      positionLabels: getSpreadPositionLabels(spread),
+      positionLabels: spreadDef.positions.map((p) => p.label),
       question: question.trim() || undefined,
       note: note.trim() || undefined,
     });
@@ -349,7 +374,11 @@ function PetTarotAppInner({
     const cards = slots
       .filter((s): s is DeckCard => s !== null)
       .map((s) => ({ id: s.card.id, reversed: s.reversed }));
-    const hash = encodeReadingToHash({ spread, topic, cards });
+    const hash = encodeReadingToHash({
+      spread: legacySpread,
+      topic,
+      cards,
+    });
     const url = `${window.location.origin}/reading${hash}`;
     const names = cards
       .map((c) => {
@@ -372,7 +401,7 @@ function PetTarotAppInner({
     setModalSlot(null);
   };
 
-  const spreadInfo = spreads[spread];
+  const spreadInfo = spreadDef;
 
   return (
     <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 pb-20">
@@ -443,30 +472,56 @@ function PetTarotAppInner({
                 {t("Chọn trải bài", "Choose a spread")}
               </h2>
               <div className="mt-4 flex flex-col gap-2">
-                {spreadIds.map((id) => (
+                {spreadRegistry.map((def) => (
                   <button
-                    key={id}
+                    key={def.id}
                     type="button"
-                    onClick={() => selectSpread(id)}
+                    onClick={() => selectSpread(def.id)}
                     className={`flex gap-4 rounded-xl border px-4 py-3 text-left text-sm transition ${
-                      spread === id
+                      spread === def.id
                         ? "border-[var(--color-antique-gold)]/50 bg-[rgba(198,161,91,0.1)] text-[var(--color-warm-ivory)]"
                         : "border-white/10 text-[var(--color-muted-text)] hover:border-[var(--color-antique-gold)]/30"
                     }`}
                   >
-                    <SpreadPreview spread={id} active={spread === id} />
+                    <SpreadPreview
+                      spread={registryToLegacy(def.id)}
+                      active={spread === def.id}
+                    />
                     <span className="min-w-0 flex-1">
                       <span className="font-serif font-semibold text-[var(--color-soft-gold)]">
-                        {spreads[id].label[locale]}
+                        {def.label[locale]}
                       </span>
                       <span className="mt-1 block text-[11px] uppercase tracking-wider text-[var(--color-antique-gold)]/80">
-                        {spreads[id].positions.length}{" "}
-                        {t("lá", "cards")}
+                        {def.cardCount} {t("lá", "cards")}
                       </span>
                       <span className="mt-1 block text-xs opacity-90">
-                        {spreads[id].blurb[locale]}
+                        {def.blurb[locale]}
                       </span>
                     </span>
+                  </button>
+                ))}
+              </div>
+
+              <h3 className="mt-6 font-serif text-sm uppercase tracking-widest text-cyan-300/90">
+                {t("Độ sâu giải bài", "Reading depth")}
+              </h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {DEPTHS.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => setDepth(d)}
+                    className={`rounded-full border px-4 py-2 text-sm transition ${
+                      depth === d
+                        ? "border-amber-400/50 bg-amber-400/10 text-amber-100"
+                        : "border-white/10 text-slate-400 hover:border-cyan-400/30"
+                    }`}
+                  >
+                    {d === "quick"
+                      ? t("Nhanh", "Quick")
+                      : d === "deep"
+                        ? t("Sâu", "Deep")
+                        : t("Chuẩn", "Standard")}
                   </button>
                 ))}
               </div>
@@ -654,8 +709,10 @@ function PetTarotAppInner({
 
                 <ReadingInterpretation
                   slots={slots}
-                  positions={positions}
+                  spreadId={spread}
                   topic={topic}
+                  question={question}
+                  depth={depth}
                 />
 
                 <GlassPanel>

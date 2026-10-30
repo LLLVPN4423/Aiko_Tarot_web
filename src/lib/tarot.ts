@@ -18,7 +18,9 @@ export type TopicId =
   | "general"
   | "love"
   | "career"
+  | "finance"
   | "self"
+  | "family"
   | "spirituality";
 
 export const spreads: Record<

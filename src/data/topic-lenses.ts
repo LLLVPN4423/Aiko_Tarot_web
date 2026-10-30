@@ -59,6 +59,40 @@ export const topicLenses: Record<TopicId, TopicLens> = {
       ],
     },
   },
+  finance: {
+    label: { vi: "Tài chính", en: "Finance" },
+    intro: {
+      vi: "Thói quen nguồn lực, ổn định và rủi ro — phản tỉnh, không phải tư vấn tài chính chuyên nghiệp.",
+      en: "Resource habits, stability, and risk — reflective only, not professional financial advice.",
+    },
+    prompts: {
+      vi: [
+        "Thói quen tiền bạc nào đang giúp hoặc hại tôi?",
+        "Tôi đang tránh quyết định tài chính nào?",
+      ],
+      en: [
+        "Which money habits help or harm me?",
+        "Which financial decision am I avoiding?",
+      ],
+    },
+  },
+  family: {
+    label: { vi: "Gia đình & xã hội", en: "Family & social" },
+    intro: {
+      vi: "Vai trò, kỳ vọng và không khí trong nhà hoặc vòng quan hệ gần.",
+      en: "Roles, expectations, and climate at home or in close circles.",
+    },
+    prompts: {
+      vi: [
+        "Ranh giới nào cần rõ hơn với người thân?",
+        "Tôi đang mang vai trò nào không còn vừa?",
+      ],
+      en: [
+        "Which boundary needs clarity with loved ones?",
+        "Which role no longer fits me?",
+      ],
+    },
+  },
   spirituality: {
     label: { vi: "Tâm linh", en: "Spirituality" },
     intro: {

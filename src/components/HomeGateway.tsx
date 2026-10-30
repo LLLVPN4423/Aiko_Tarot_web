@@ -4,13 +4,19 @@ import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { deckStats, majorCards } from "@/data/deck-index";
-import { spreads, type SpreadId } from "@/lib/tarot";
+import { getSpreadDef } from "@/data/spreads/registry";
+import type { SpreadId } from "@/lib/tarot";
 import { useI18n } from "@/lib/i18n";
 import { GlassPanel } from "./GlassPanel";
 import { SpreadPreview } from "./SpreadPreview";
 import { TarotCardFace } from "./TarotCardFace";
 
-const featuredSpreads: SpreadId[] = ["single", "three", "five", "celtic"];
+const featuredSpreads: { id: string; preview: SpreadId }[] = [
+  { id: "single", preview: "single" },
+  { id: "three-time", preview: "three" },
+  { id: "five", preview: "five" },
+  { id: "celtic", preview: "celtic" },
+];
 
 const featuredSlugs = ["the-fool", "the-star", "the-moon", "the-sun"];
 
@@ -44,7 +50,7 @@ export function HomeGateway() {
             )}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/reading?spread=three" className="btn-primary px-8 py-3">
+            <Link href="/reading?spread=three-time" className="btn-primary px-8 py-3">
               {t("Bắt đầu xem bài", "Begin your reading")}
             </Link>
             <Link href="/library" className="btn-ghost px-6 py-3">
@@ -91,20 +97,22 @@ export function HomeGateway() {
           {t("Trải bài nổi bật", "Featured spreads")}
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredSpreads.map((id) => (
-            <Link key={id} href={`/reading?spread=${id}`} className="group">
-              <GlassPanel className="transition group-hover:border-[var(--color-antique-gold)]/45">
-                <SpreadPreview spread={id} active />
-                <p className="mt-3 font-serif text-sm text-[var(--color-soft-gold)]">
-                  {spreads[id].label[locale]}
-                </p>
-                <p className="mt-1 text-xs text-[var(--color-muted-text)]">
-                  {spreads[id].positions.length}{" "}
-                  {t("lá", "cards")} · {spreads[id].blurb[locale]}
-                </p>
-              </GlassPanel>
-            </Link>
-          ))}
+          {featuredSpreads.map(({ id, preview }) => {
+            const def = getSpreadDef(id)!;
+            return (
+              <Link key={id} href={`/reading?spread=${id}`} className="group">
+                <GlassPanel className="transition group-hover:border-[var(--color-antique-gold)]/45">
+                  <SpreadPreview spread={preview} active />
+                  <p className="mt-3 font-serif text-sm text-[var(--color-soft-gold)]">
+                    {def.label[locale]}
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--color-muted-text)]">
+                    {def.cardCount} {t("lá", "cards")} · {def.blurb[locale]}
+                  </p>
+                </GlassPanel>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

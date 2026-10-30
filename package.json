@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "deck:meta": "node scripts/generate-deck-metadata.mjs",
-    "deck:compose": "node scripts/compose-card.mjs"
+    "deck:compose": "node scripts/compose-card.mjs",
+    "test:reader": "npx --yes tsx scripts/test-reader.ts"
   },
   "dependencies": {
     "framer-motion": "^14.1.0",

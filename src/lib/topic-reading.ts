@@ -37,7 +37,9 @@ export function topicInterpretation(
       general: `Trong bức tranh tổng quát, năng lượng “${kw}” của lá này đang tô màu tuần này của bạn. ${core} Hãy hỏi: điều gì cần được đặt lên bàn trước tiên?`,
       love: `Về trái tim và gắn kết: “${kw}” đang hiện diện trong cách bạn yêu hoặc được yêu. ${core} Chú ý ranh giới và sự chân thật cảm xúc hơn là kịch bản lý tưởng.`,
       career: `Trong công việc và nguồn lực: “${kw}” chỉ hướng hành động nghề nghiệp. ${core} Chuyển thông điệp thành một việc làm được trong tuần — email, quyết định, hoặc ranh giới công việc.`,
+      finance: `Về tài chính / vật chất: “${kw}” soi thói quen nguồn lực. ${core} Đây là phản tỉnh, không phải tư vấn tài chính chuyên nghiệp.`,
       self: `Trên hành trình phát triển: “${kw}” là bài học nội tâm. ${core} Chăm sóc phần bản thân đang bị bỏ quên thay vì chỉ tối ưu hiệu suất.`,
+      family: `Trong gia đình / vòng gần: “${kw}” nói về vai trò và không khí chung. ${core} Làm rõ nhu cầu thay vì đoán ý người khác.`,
       spirituality: `Trên đường tâm linh: “${kw}” là dấu hiệu cần lắng nghe. ${core} Biến thông điệp thành một nghi thức nhỏ (thở, viết, im lặng) thay vì chỉ suy nghĩ về nó.`,
     };
     return `【${label}】 ${frames[topic]}`;
@@ -47,7 +49,9 @@ export function topicInterpretation(
     general: `In the wider picture, “${kw}” colors this chapter. ${core} Ask what belongs on the table first.`,
     love: `In matters of the heart, “${kw}” shows how you love or receive love. ${core} Favor honesty and boundaries over idealized scripts.`,
     career: `At work and with resources, “${kw}” points to professional action. ${core} Turn the message into one doable task this week — a message, a decision, or a boundary.`,
+    finance: `In finance / material life, “${kw}” mirrors resource habits. ${core} Reflective only — not professional financial advice.`,
     self: `On the growth path, “${kw}” is an inner lesson. ${core} Tend the neglected self rather than only optimizing performance.`,
+    family: `In family / close circles, “${kw}” speaks to roles and climate. ${core} Clarify needs instead of guessing others.`,
     spirituality: `On the spiritual path, “${kw}” is a signal to listen. ${core} Make one small ritual (breath, writing, silence) instead of only thinking about it.`,
   };
   return `[${label}] ${frames[topic]}`;
@@ -120,8 +124,10 @@ export function topicSynthesisNarrative(
     const hooks: Record<TopicId, string> = {
       general: "bức tranh đời sống",
       love: "trái tim và các mối gắn kết",
-      career: "công việc, tiền bạc và trách nhiệm",
+      career: "công việc và trách nhiệm",
+      finance: "nguồn lực và thói quen tiền bạc",
       self: "sự trưởng thành nội tâm",
+      family: "gia đình và vòng quan hệ gần",
       spirituality: "đường tâm linh và ý nghĩa",
     };
     return {
@@ -133,8 +139,10 @@ export function topicSynthesisNarrative(
   const hooks: Record<TopicId, string> = {
     general: "the wider life picture",
     love: "the heart and bonds",
-    career: "work, money, and duty",
+    career: "work and duty",
+    finance: "resources and money habits",
     self: "inner maturation",
+    family: "family and close circles",
     spirituality: "meaning and spirit",
   };
   return {
