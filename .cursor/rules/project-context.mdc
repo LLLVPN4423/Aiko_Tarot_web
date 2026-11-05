@@ -1,0 +1,28 @@
+---
+description: Always read and update PROJECT_CONTEXT.md to avoid full-repo rediscovery
+alwaysApply: true
+---
+
+# Project context protocol
+
+## Before work
+
+1. Read [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) first (and `AGENTS.md` for Next.js 16 caveats).
+2. Do **not** start with a broad codebase exploration unless the task is truly unclear after reading that file.
+3. Open only the paths listed there that match the task. Deep docs (`TAROT_*.md`, etc.) only when needed.
+
+## Product constraints (non-negotiable)
+
+- No LLM / AI SDK / AI Gateway / chatbot AI — interpretations stay deterministic.
+- Keep the custom **72-card** deck (not RWS 78).
+- Prefer bilingual VI/EN for user-facing copy.
+
+## After work
+
+When you change behavior, architecture, routes, data shape, storage keys, or deploy surface:
+
+1. Append a **newest-first** bullet under `## Agent changelog` in `PROJECT_CONTEXT.md`.
+2. One line: date, what changed, key paths or commit if known.
+3. If a fact in the top sections of `PROJECT_CONTEXT.md` became wrong, update that section briefly (keep the file short).
+
+Skip changelog noise for typos-only or pure formatting with no behavior change.

@@ -1,3 +1,9 @@
+# Agent entry
+
+1. Read **[`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md)** first (living project map + changelog).
+2. Follow `.cursor/rules/project-context.mdc` — update the changelog after meaningful changes.
+3. Next.js 16 notes below still apply.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
