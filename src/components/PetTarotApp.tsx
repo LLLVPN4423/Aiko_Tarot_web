@@ -179,7 +179,6 @@ function PetTarotAppInner({
     initialShared?.topic ?? "general",
   );
   const [depth, setDepth] = useState<ReadingDepth>("standard");
-  const [question, setQuestion] = useState("");
   const spreadDef = getSpreadDef(spread) ?? startingDef;
   const slotCount = spreadDef.cardCount;
   const legacySpread = registryToLegacy(spread);
@@ -351,7 +350,6 @@ function PetTarotAppInner({
         .filter((s): s is DeckCard => s !== null)
         .map((s) => ({ id: s.card.id, reversed: s.reversed })),
       positionLabels: spreadDef.positions.map((p) => p.label),
-      question: question.trim() || undefined,
       note: note.trim() || undefined,
     });
     setJournalSaved(true);
@@ -551,14 +549,6 @@ function PetTarotAppInner({
                   <li key={p}>{p}</li>
                 ))}
               </ul>
-              <label className="mt-4 block text-sm text-slate-400">
-                {t("Câu hỏi của bạn (tuỳ chọn)", "Your question (optional)")}
-                <input
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-200"
-                />
-              </label>
               <button
                 type="button"
                 onClick={beginDeck}
@@ -711,7 +701,7 @@ function PetTarotAppInner({
                   slots={slots}
                   spreadId={spread}
                   topic={topic}
-                  question={question}
+                  question=""
                   depth={depth}
                 />
 
