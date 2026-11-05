@@ -101,6 +101,7 @@ npx vercel deploy --prod --yes
 Append newest entries at the **top** of this list (newest first).  
 Format: `- YYYY-MM-DD — <one line: what changed + key paths>`
 
+- 2026-11-06 — Clarified readings: less meta/jargon, one meaning+tip per card, shorter overview/narrative/guidance (`src/lib/reader/*`, `ReadingInterpretation.tsx`).
 - 2026-11-05 — Added `PROJECT_CONTEXT.md` + `.cursor/rules/project-context.mdc` so agents read/update project context instead of full-repo rediscovery.
 - 2026-10-31 — Deterministic bilingual interpretation engine (`src/data/knowledge/`, `src/data/spreads/`, `src/lib/reader/`), reading UI + follow-up session; commit `53d4391`.
 - 2026-10-31 — Fixed spread URL/`?spread=` so 1/5/10-card layouts apply; commit `38a1fb9`.

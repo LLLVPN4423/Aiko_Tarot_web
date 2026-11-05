@@ -115,8 +115,12 @@ export function ReadingInterpretation({
     <div className="space-y-6">
       <GlassPanel>
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--color-antique-gold)]">
-          {t("Chủ đề", "Topic")} · {topicLenses[result.topic].label[loc]} ·{" "}
-          {depth}
+          {topicLenses[result.topic].label[loc]}
+          {depth === "deep"
+            ? ` · ${t("đọc sâu", "deep")}`
+            : depth === "quick"
+              ? ` · ${t("nhanh", "quick")}`
+              : ""}
         </p>
         {question.trim() ? (
           <p className="mt-2 text-sm italic text-[var(--color-muted-text)]">
@@ -124,44 +128,24 @@ export function ReadingInterpretation({
           </p>
         ) : null}
         <h3 className="mt-3 font-serif text-lg text-[var(--color-soft-gold)]">
-          {t("Tổng quan trải bài", "Reading overview")}
+          {t("Tóm tắt", "In short")}
         </h3>
         <p className="mt-3 text-sm leading-relaxed text-[var(--color-warm-ivory)]/90">
           {result.overview[loc]}
         </p>
-        <h4 className="mt-5 text-xs font-semibold uppercase tracking-widest text-[var(--color-antique-gold)]">
-          {t("Năng lượng tổng", "Overall energy")}
-        </h4>
-        <p className="mt-2 text-sm text-[var(--color-muted-text)]">
-          {result.energy[loc]}
-        </p>
-        <h4 className="mt-5 text-xs font-semibold uppercase tracking-widest text-[var(--color-antique-gold)]">
-          {t("Mô típ & cân bằng", "Patterns & balance")}
-        </h4>
-        <p className="mt-2 text-sm text-[var(--color-muted-text)]">
-          {result.patterns.summary[loc]}
-        </p>
-        <button
-          type="button"
-          className="mt-4 text-xs text-cyan-300/90 underline-offset-2 hover:underline"
-          onClick={() => setShowWhy((v) => !v)}
-        >
-          {showWhy
-            ? t("Ẩn cơ sở giải bài", "Hide interpretation basis")
-            : t("Vì sao giải như vậy?", "Why this reading?")}
-        </button>
-        {showWhy ? (
-          <p className="mt-2 text-xs leading-relaxed text-slate-500">
-            {t(
-              "Hệ thống dùng knowledge base song ngữ + quy tắc vị trí, nguyên tố, tổ hợp lá — không dùng AI/LLM.",
-              "This system uses a bilingual knowledge base plus position, element, and combination rules — no AI/LLM.",
-            )}
-          </p>
-        ) : null}
       </GlassPanel>
 
       {result.cards.map((c) => {
         const deck = faceById.get(c.cardId);
+        const meaning = c.sections.find((s) => s.id === "meaning");
+        const tip = c.sections.find((s) => s.id === "advice");
+        const extra = c.sections.find(
+          (s) => s.id === "approach" || s.id === "symbolism",
+        );
+        const kws =
+          loc === "vi"
+            ? knowledgeCards.find((k) => k.id === c.cardId)?.keywords.vi
+            : c.keywords;
         return (
           <GlassPanel key={`${c.cardId}-${c.positionId}`}>
             <div className="flex flex-col gap-6 sm:flex-row">
@@ -176,34 +160,32 @@ export function ReadingInterpretation({
                   {c.reversed
                     ? ` · ${t("Ngược", "Reversed")}`
                     : ` · ${t("Thuận", "Upright")}`}
-                  {c.approach ? ` · ${c.approach}` : ""}
                 </p>
                 <h3 className="mt-1 font-serif text-xl text-[var(--color-warm-ivory)]">
                   {c.name[loc]}
                 </h3>
-                <p className="mt-1 text-xs text-[var(--color-soft-gold)]">
-                  {(loc === "vi"
-                    ? knowledgeCards.find((k) => k.id === c.cardId)?.keywords.vi
-                    : c.keywords
-                  )?.join(" · ")}
-                </p>
-                <div className="mt-4 space-y-4">
-                  {c.sections.map((sec) => (
-                    <div key={sec.id}>
-                      <h4 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-antique-gold)]">
-                        {sec.title[loc]}
-                      </h4>
-                      <p className="mt-1 text-sm leading-relaxed text-[var(--color-muted-text)]">
-                        {sec.body[loc]}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                {showWhy ? (
-                  <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-slate-400">
-                    <p>{c.transparency.traditional[loc]}</p>
-                    <p className="mt-2">{c.transparency.position[loc]}</p>
-                  </div>
+                {kws?.length ? (
+                  <p className="mt-1 text-xs text-[var(--color-soft-gold)]">
+                    {kws.slice(0, 4).join(" · ")}
+                  </p>
+                ) : null}
+                {meaning ? (
+                  <p className="mt-4 text-sm leading-relaxed text-[var(--color-warm-ivory)]/90">
+                    {meaning.body[loc]}
+                  </p>
+                ) : null}
+                {tip ? (
+                  <p className="mt-3 text-sm text-[var(--color-muted-text)]">
+                    <span className="text-[var(--color-antique-gold)]">
+                      {t("Gợi ý", "Tip")}
+                    </span>
+                    : {tip.body[loc]}
+                  </p>
+                ) : null}
+                {extra ? (
+                  <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                    {extra.body[loc]}
+                  </p>
                 ) : null}
               </div>
             </div>
@@ -211,79 +193,56 @@ export function ReadingInterpretation({
         );
       })}
 
-      {result.combinations.length > 0 ? (
-        <GlassPanel>
-          <h3 className="font-serif text-lg text-[var(--color-soft-gold)]">
-            {t("Quan hệ giữa các lá", "Card relationships")}
-          </h3>
-          <ul className="mt-4 space-y-3">
-            {result.combinations.map((hit) => (
-              <li key={hit.id} className="text-sm text-[var(--color-muted-text)]">
-                <span className="font-serif text-[var(--color-warm-ivory)]">
-                  {hit.theme[loc]}
-                </span>
-                <span className="mt-1 block">{hit.meaning[loc]}</span>
-                {hit.caution ? (
-                  <span className="mt-1 block text-xs text-amber-200/70">
-                    {hit.caution[loc]}
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </GlassPanel>
-      ) : null}
-
       <GlassPanel>
         <h3 className="font-serif text-lg text-[var(--color-soft-gold)]">
-          {t("Câu chuyện tổng thể", "Overall reading")}
+          {t("Nối các lá lại", "Putting it together")}
         </h3>
         <p className="mt-3 text-sm leading-relaxed text-[var(--color-warm-ivory)]/90">
           {result.narrative[loc]}
         </p>
+        {result.combinations[0] ? (
+          <p className="mt-3 text-sm text-[var(--color-muted-text)]">
+            <span className="text-[var(--color-antique-gold)]">
+              {result.combinations[0].theme[loc]}
+            </span>
+            — {result.combinations[0].meaning[loc]}
+          </p>
+        ) : null}
       </GlassPanel>
 
       <GlassPanel>
         <h3 className="font-serif text-lg text-[var(--color-soft-gold)]">
-          {t("Hướng dẫn", "Guidance")}
+          {t("Bạn có thể làm gì", "What you can do")}
         </h3>
-        <ul className="mt-3 space-y-2 text-sm text-[var(--color-muted-text)]">
-          <li>
-            <strong className="text-[var(--color-antique-gold)]">
-              {t("Chú ý", "Attend")}
-            </strong>
-            : {result.guidance.attend[loc]}
-          </li>
-          <li>
-            <strong className="text-[var(--color-antique-gold)]">
-              {t("Xem lại", "Reconsider")}
-            </strong>
-            : {result.guidance.reconsider[loc]}
-          </li>
-          <li>
-            <strong className="text-[var(--color-antique-gold)]">
-              {t("Tránh", "Avoid")}
-            </strong>
-            : {result.guidance.avoid[loc]}
-          </li>
-          <li>
-            <strong className="text-[var(--color-antique-gold)]">
-              {t("Bước tiếp", "Next")}
-            </strong>
-            : {result.guidance.next[loc]}
-          </li>
-        </ul>
-        <h4 className="mt-5 text-xs font-semibold uppercase tracking-widest text-[var(--color-antique-gold)]">
-          {t("Câu hỏi suy ngẫm", "Reflection questions")}
-        </h4>
-        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[var(--color-muted-text)]">
+        <p className="mt-3 text-sm text-[var(--color-warm-ivory)]/90">
+          {result.guidance.next[loc]}
+        </p>
+        <p className="mt-2 text-sm text-[var(--color-muted-text)]">
+          {result.guidance.attend[loc]}
+        </p>
+        <p className="mt-2 text-sm text-[var(--color-muted-text)]">
+          {result.guidance.avoid[loc]}
+        </p>
+        <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-[var(--color-muted-text)]">
           {result.reflections.map((r) => (
             <li key={r.en}>{r[loc]}</li>
           ))}
         </ul>
-        <p className="mt-4 text-xs leading-relaxed text-slate-500">
-          {result.ethicsNote[loc]}
-        </p>
+        <button
+          type="button"
+          className="mt-4 text-xs text-cyan-300/90 underline-offset-2 hover:underline"
+          onClick={() => setShowWhy((v) => !v)}
+        >
+          {showWhy
+            ? t("Ẩn ghi chú", "Hide note")
+            : t("Ghi chú nhỏ", "Small note")}
+        </button>
+        {showWhy ? (
+          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+            {result.ethicsNote[loc]}{" "}
+            {result.guidance.reconsider[loc]}
+          </p>
+        ) : null}
       </GlassPanel>
 
       <GlassPanel>

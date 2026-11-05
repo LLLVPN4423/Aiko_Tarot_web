@@ -70,45 +70,23 @@ export function analyzePatterns(
     .map(([n]) => n);
 
   const n = cards.length || 1;
+  const bitsVi: string[] = [];
+  const bitsEn: string[] = [];
+  if (majorCount >= Math.ceil(n / 2)) {
+    bitsVi.push("nhiều Major — chuyện lớn hơn chuyện vụn");
+    bitsEn.push("several Majors — bigger themes than trivia");
+  }
+  if (courtCount >= 2) {
+    bitsVi.push("nhiều lá triều đình — chú ý người và vai trò");
+    bitsEn.push("several courts — people and roles matter");
+  }
+  if (reversedCount >= Math.ceil(n / 2)) {
+    bitsVi.push("nhiều lá ngược — đang có chỗ bị kẹt hoặc cần nhìn vào trong");
+    bitsEn.push("many reversals — something is stuck or needs inward looking");
+  }
   const summary = {
-    vi: [
-      majorCount >= Math.ceil(n / 2)
-        ? `Major Arcana chiếm ${majorCount}/${n} — chủ đề lớn / chuyển tiếp quan trọng hơn chuyện vụn.`
-        : `Major ${majorCount}/${n} — bài học lớn có mặt nhưng không lấn át.`,
-      dominantElement
-        ? `Nguyên tố nổi: ${dominantElement}${missingElements.length ? `; thiếu rõ: ${missingElements.join(", ")} (không cường điệu hóa sự thiếu).` : "."}`
-        : "",
-      courtCount >= 2
-        ? `${courtCount} lá triều đình — nhấn mạnh người, vai trò, hoặc thái độ.`
-        : "",
-      numberEchoes.length
-        ? `Số lặp: ${numberEchoes.join(", ")} — chủ đề bậc số có thể đang vọng lại.`
-        : "",
-      reversedCount
-        ? `${reversedCount}/${n} lá ngược — chú ý chỗ nội tại / bị chặn / lệch nhịp.`
-        : `Không lá ngược — biểu hiện thiên về hướng thẳng.`,
-    ]
-      .filter(Boolean)
-      .join(" "),
-    en: [
-      majorCount >= Math.ceil(n / 2)
-        ? `Major Arcana are ${majorCount}/${n} — larger themes / transitions outweigh trivia.`
-        : `Majors ${majorCount}/${n} — big lessons present without dominating.`,
-      dominantElement
-        ? `Dominant element: ${dominantElement}${missingElements.length ? `; lightly missing: ${missingElements.join(", ")} (do not overstate absence).` : "."}`
-        : "",
-      courtCount >= 2
-        ? `${courtCount} court cards — people, roles, or attitudes matter.`
-        : "",
-      numberEchoes.length
-        ? `Repeated numbers: ${numberEchoes.join(", ")} — numeric themes may echo.`
-        : "",
-      reversedCount
-        ? `${reversedCount}/${n} reversed — notice inward / blocked / off-tempo places.`
-        : `No reversals — expression leans direct.`,
-    ]
-      .filter(Boolean)
-      .join(" "),
+    vi: bitsVi.length ? `(${bitsVi.join("; ")}.)` : "",
+    en: bitsEn.length ? `(${bitsEn.join("; ")}.)` : "",
   };
 
   return {

@@ -79,11 +79,11 @@ export function analyzeQuestion(
       : undefined,
     summary: {
       vi: q
-        ? `Câu hỏi được hiểu quanh chủ đề “${topicHint}”, trọng tâm ${focus}, tông cảm xúc ${emotionalTone}.`
-        : `Không có câu hỏi chữ — đọc theo chủ đề “${topic}” và cấu trúc trải bài.`,
+        ? `Đang đọc quanh chủ đề “${topicHint}”.`
+        : `Đang đọc theo chủ đề “${topic}”.`,
       en: q
-        ? `Question framed around “${topicHint}”, focus ${focus}, tone ${emotionalTone}.`
-        : `No written question — reading by topic “${topic}” and spread structure.`,
+        ? `Reading around “${topicHint}”.`
+        : `Reading by topic “${topic}”.`,
     },
   };
 }

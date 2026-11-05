@@ -1,4 +1,18 @@
+import type { ReadingTopicId } from "@/data/knowledge/types";
 import type { CardInterpretation, CombinationHit, QuestionAnalysis } from "./types";
+
+function topicWord(topic: ReadingTopicId): { vi: string; en: string } {
+  const map: Record<ReadingTopicId, { vi: string; en: string }> = {
+    general: { vi: "việc này", en: "this" },
+    love: { vi: "tình cảm", en: "love" },
+    career: { vi: "công việc", en: "work" },
+    finance: { vi: "tiền bạc", en: "money" },
+    self: { vi: "bản thân", en: "yourself" },
+    family: { vi: "gia đình", en: "family" },
+    spirituality: { vi: "nội tâm", en: "inner life" },
+  };
+  return map[topic];
+}
 
 export function buildGuidance(options: {
   cards: CardInterpretation[];
@@ -10,7 +24,8 @@ export function buildGuidance(options: {
   avoid: { vi: string; en: string };
   next: { vi: string; en: string };
 } {
-  const { cards, combinations, analyzed } = options;
+  const { cards, analyzed } = options;
+  const tw = topicWord(analyzed.topicHint);
   const challenge =
     cards.find((c) => c.role === "challenge" || c.role === "obstacle") ??
     cards.find((c) => c.reversed) ??
@@ -21,30 +36,30 @@ export function buildGuidance(options: {
 
   return {
     attend: {
-      vi: `Chú ý “${challenge?.name.vi ?? "nhịp chính"}” ở ô ${challenge?.positionLabel ?? ""} — đó là chỗ đang xin ánh sáng.`,
-      en: `Attend to “${challenge?.name.en ?? "the main pulse"}” in ${challenge?.positionLabel ?? ""} — that seat asks for light.`,
+      vi: `Nhìn kỹ “${challenge?.name.vi}” — đó là chỗ đang làm ${tw.vi} rối nhất.`,
+      en: `Look at “${challenge?.name.en}” — that is where ${tw.en} feels most tangled.`,
     },
     reconsider: {
-      vi: `Xem lại giả định quanh chủ đề ${analyzed.topicHint}${combinations[0] ? `; cặp “${combinations[0].theme.vi}” gợi bạn đừng đọc từng lá tách rời` : ""}.`,
-      en: `Reconsider assumptions around ${analyzed.topicHint}${combinations[0] ? `; the “${combinations[0].theme.en}” pairing asks you not to read cards in isolation` : ""}.`,
+      vi: `Hỏi lại: mình đang giả định gì về ${tw.vi} mà chưa kiểm chứng?`,
+      en: `Ask: what assumption about ${tw.en} have I not checked?`,
     },
     avoid: {
       vi:
         analyzed.topicHint === "finance"
-          ? "Tránh quyết định tiền lớn chỉ vì một trải bài; dùng bài như gương thói quen, không như bảo chứng."
+          ? "Đừng quyết định tiền lớn chỉ vì một trải bài."
           : analyzed.focus === "relationship"
-            ? "Tránh khẳng định ý nghĩ người khác như sự thật; giữ ngôn ngữ 'có thể / gợi ý'."
-            : "Tránh đọc lại liên tục đến khi ra 'lá đẹp' — đó tạo phụ thuộc chứ không sáng suốt.",
+            ? "Đừng khẳng định ý nghĩ người khác như sự thật."
+            : "Đừng xào lại đến khi ra ‘lá đẹp’.",
       en:
         analyzed.topicHint === "finance"
-          ? "Avoid major money moves from a spread alone; use it as a habit mirror, not a guarantee."
+          ? "Don’t make a big money move from one spread alone."
           : analyzed.focus === "relationship"
-            ? "Avoid declaring another person's thoughts as fact; keep 'may / suggests' language."
-            : "Avoid reshuffling until a 'pretty' card appears — that breeds dependency, not clarity.",
+            ? "Don’t treat another person’s thoughts as fact."
+            : "Don’t reshuffle until a ‘pretty’ card appears.",
     },
     next: {
-      vi: `Bước tiếp theo gắn với “${adviceCard?.name.vi ?? "lời khuyên"}”: chọn một hành động nhỏ trong 48 giờ (viết, nói, hoặc ranh giới).`,
-      en: `Next step follows “${adviceCard?.name.en ?? "counsel"}”: one small act within 48 hours (write, speak, or set a boundary).`,
+      vi: `Việc tiếp theo (gắn “${adviceCard?.name.vi}”): một hành động nhỏ trong 48 giờ liên quan ${tw.vi}.`,
+      en: `Next (via “${adviceCard?.name.en}”): one small act within 48 hours about ${tw.en}.`,
     },
   };
 }
@@ -53,25 +68,21 @@ export function buildReflections(options: {
   cards: CardInterpretation[];
   analyzed: QuestionAnalysis;
 }): { vi: string; en: string }[] {
-  const { cards, analyzed } = options;
-  const k = cards[0]?.name;
+  const { analyzed } = options;
+  const tw = topicWord(analyzed.topicHint);
   return [
     {
-      vi: `Điều gì trong trải bài về “${k?.vi ?? "chủ đề này"}” đang đúng với tuần này của tôi?`,
-      en: `What in this spread about “${k?.en ?? "this theme"}” is true for my week?`,
+      vi: `Điều gì về ${tw.vi} trong trải này đang đúng với tuần này?`,
+      en: `What about ${tw.en} in this spread is true for my week?`,
     },
     {
-      vi: `Nếu tôi chỉ thay một thói quen liên quan ${analyzed.topicHint}, đó sẽ là gì?`,
-      en: `If I change only one habit related to ${analyzed.topicHint}, what would it be?`,
-    },
-    {
-      vi: `Lá nào tôi muốn phủ nhận nhất — và vì sao?`,
-      en: `Which card do I most want to deny — and why?`,
+      vi: `Nếu chỉ đổi một việc liên quan ${tw.vi}, đó sẽ là gì?`,
+      en: `If I change only one thing about ${tw.en}, what is it?`,
     },
   ];
 }
 
 export const ETHICS_NOTE = {
-  vi: "Tarot ở đây là thực hành biểu tượng và phản tỉnh — không phải phương pháp khoa học dự báo tương lai. Không có bảo đảm sự kiện; với việc y tế, pháp lý, tài chính quan trọng hãy tìm chuyên gia phù hợp.",
-  en: "Tarot here is symbolic reflective practice — not a scientifically verified forecasting method. No event is guaranteed; for medical, legal, or high-stakes financial matters, seek appropriate professionals.",
+  vi: "Tarot ở đây để phản tỉnh — không dự báo chắc chắn. Việc y tế, pháp lý, tài chính lớn: hãy tìm chuyên gia phù hợp.",
+  en: "Tarot here is for reflection — not certain prediction. For medical, legal, or high-stakes money matters, seek a suitable professional.",
 };

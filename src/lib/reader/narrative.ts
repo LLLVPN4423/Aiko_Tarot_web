@@ -1,6 +1,20 @@
 import type { Locale } from "@/data/major-arcana";
+import type { ReadingTopicId } from "@/data/knowledge/types";
 import type { CombinationHit, PatternReport, QuestionAnalysis } from "./types";
 import type { CardInterpretation } from "./types";
+
+function topicPhrase(topic: ReadingTopicId): { vi: string; en: string } {
+  const map: Record<ReadingTopicId, { vi: string; en: string }> = {
+    general: { vi: "bức tranh chung", en: "the wider picture" },
+    love: { vi: "tình cảm", en: "love" },
+    career: { vi: "công việc", en: "work" },
+    finance: { vi: "tiền bạc", en: "money" },
+    self: { vi: "bản thân", en: "yourself" },
+    family: { vi: "gia đình", en: "family" },
+    spirituality: { vi: "nội tâm", en: "inner life" },
+  };
+  return map[topic];
+}
 
 export function buildOverview(options: {
   analyzed: QuestionAnalysis;
@@ -9,11 +23,21 @@ export function buildOverview(options: {
   locale: Locale;
 }): { vi: string; en: string } {
   const { analyzed, cards, patterns } = options;
-  const namesVi = cards.map((c) => c.name.vi).join(", ");
-  const namesEn = cards.map((c) => c.name.en).join(", ");
+  const topic = topicPhrase(analyzed.topicHint);
+  const first = cards[0];
+  const last = cards[cards.length - 1];
+  if (!first || !last) return { vi: "", en: "" };
+
+  const clarifyVi = analyzed.clarification
+    ? ` ${analyzed.clarification.vi}`
+    : "";
+  const clarifyEn = analyzed.clarification
+    ? ` ${analyzed.clarification.en}`
+    : "";
+
   return {
-    vi: `${analyzed.summary.vi}${analyzed.clarification ? ` ${analyzed.clarification.vi}` : ""} Trải ${cards.length} lá (${namesVi}). ${patterns.summary.vi}`,
-    en: `${analyzed.summary.en}${analyzed.clarification ? ` ${analyzed.clarification.en}` : ""} ${cards.length}-card spread (${namesEn}). ${patterns.summary.en}`,
+    vi: `Về ${topic.vi}: trọng tâm đang ở “${first.name.vi}${first.reversed ? " (ngược)" : ""}”, và hướng khép lại nghiêng về “${last.name.vi}${last.reversed ? " (ngược)" : ""}”.${clarifyVi}${patterns.summary.vi ? ` ${patterns.summary.vi}` : ""}`,
+    en: `On ${topic.en}: the center is “${first.name.en}${first.reversed ? " (rev)" : ""}”, closing toward “${last.name.en}${last.reversed ? " (rev)" : ""}”.${clarifyEn}${patterns.summary.en ? ` ${patterns.summary.en}` : ""}`,
   };
 }
 
@@ -21,12 +45,13 @@ export function buildEnergy(options: {
   cards: CardInterpretation[];
   patterns: PatternReport;
 }): { vi: string; en: string } {
-  const { cards, patterns } = options;
-  const first = cards[0];
-  const last = cards[cards.length - 1];
+  // Kept for API compatibility; overview already carries the pulse.
+  const { cards } = options;
+  const mid = cards[Math.floor(cards.length / 2)];
+  if (!mid) return { vi: "", en: "" };
   return {
-    vi: `Năng lượng mở với “${first?.name.vi ?? "—"}${first?.reversed ? " (ngược)" : ""}” và khép hướng “${last?.name.vi ?? "—"}${last?.reversed ? " (ngược)" : ""}”. ${patterns.dominantElement ? `Nhịp nguyên tố nghiêng về ${patterns.dominantElement}.` : ""}`,
-    en: `Energy opens with “${first?.name.en ?? "—"}${first?.reversed ? " (rev)" : ""}” and leans toward “${last?.name.en ?? "—"}${last?.reversed ? " (rev)" : ""}”. ${patterns.dominantElement ? `Elemental pulse favors ${patterns.dominantElement}.` : ""}`,
+    vi: `Điểm tựa giữa trải: “${mid.name.vi}” ở ô ${mid.positionLabel}.`,
+    en: `Midpoint: “${mid.name.en}” in ${mid.positionLabel}.`,
   };
 }
 
@@ -36,31 +61,26 @@ export function buildNarrative(options: {
   patterns: PatternReport;
   analyzed: QuestionAnalysis;
 }): { vi: string; en: string } {
-  const { cards, combinations, patterns, analyzed } = options;
+  const { cards, combinations, analyzed } = options;
   if (!cards.length) return { vi: "", en: "" };
 
-  const mid = cards[Math.floor(cards.length / 2)];
-  const comboVi = combinations.length
-    ? ` Cặp nổi: ${combinations.map((c) => c.theme.vi).join("; ")}.`
+  const topic = topicPhrase(analyzed.topicHint);
+  const first = cards[0];
+  const last = cards[cards.length - 1];
+  const tension =
+    cards.find((c) => c.role === "challenge" || c.role === "obstacle") ??
+    cards.find((c) => c.reversed) ??
+    cards[Math.floor(cards.length / 2)];
+
+  const comboVi = combinations[0]
+    ? ` Hai lá nổi cùng nhau gợi “${combinations[0].theme.vi}”.`
     : "";
-  const comboEn = combinations.length
-    ? ` Key pairs: ${combinations.map((c) => c.theme.en).join("; ")}.`
+  const comboEn = combinations[0]
+    ? ` A standout pairing suggests “${combinations[0].theme.en}”.`
     : "";
 
   return {
-    vi: [
-      `Chuyện đang xảy ra xoay quanh ô “${cards[0].positionLabel}” với ${cards[0].name.vi}.`,
-      `Lực nền / điểm tựa xuất hiện ở “${mid.positionLabel}” (${mid.name.vi}).`,
-      `Căng thẳng chính nằm ở chỗ thuận/ngược và nguyên tố: ${patterns.summary.vi}`,
-      `Điều có thể học được gắn với chủ đề ${analyzed.topicHint} — không phải lời tiên tri cứng.`,
-      `Hướng khả dĩ kết ở “${cards[cards.length - 1].positionLabel}” (${cards[cards.length - 1].name.vi}) nếu bạn điều chỉnh theo lời khuyên.${comboVi}`,
-    ].join(" "),
-    en: [
-      `What is happening centers on “${cards[0].positionLabel}” with ${cards[0].name.en}.`,
-      `A pivot appears at “${mid.positionLabel}” (${mid.name.en}).`,
-      `Central tension lives in orientation and element: ${patterns.summary.en}`,
-      `What can be learned ties to ${analyzed.topicHint} — not rigid prophecy.`,
-      `A possible direction closes at “${cards[cards.length - 1].positionLabel}” (${cards[cards.length - 1].name.en}) if counsel is practiced.${comboEn}`,
-    ].join(" "),
+    vi: `Với ${topic.vi}, chuyện mở bằng ${first.name.vi} (${first.positionLabel}). Chỗ cần nhìn kỹ là ${tension.name.vi} (${tension.positionLabel}). Hướng đi tiếp gắn với ${last.name.vi} — lấy đó làm việc nhỏ có thể làm, không phải lời hứa lớn.${comboVi}`,
+    en: `For ${topic.en}, the story opens with ${first.name.en} (${first.positionLabel}). Look closely at ${tension.name.en} (${tension.positionLabel}). The next step sits with ${last.name.en} — treat it as one doable act, not a grand promise.${comboEn}`,
   };
 }
